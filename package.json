@@ -1,0 +1,24 @@
+{
+  "name": "BookScraping",
+  "version": "1.0.0",
+  "description": "get books information",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Neo Choi",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "request": "^2.55.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vampireneo/Book.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vampireneo/Book/issues"
+  },
+  "homepage": "https://github.com/vampireneo/Book"
+}
