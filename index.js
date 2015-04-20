@@ -14,7 +14,7 @@ function getFromKingstone2(pISBN) {
 			var link = $("#mainContent ul a.anchor").eq(0);
 			var targetUrl = $(link).attr("href");
 				
-			console.log("Target URL is: " + targetUrl);
+			//console.log("Target URL is: " + targetUrl);
 			request(domain + targetUrl, function (error, response, body) {
 				if (!error) {
 					var $ = cheerio.load(body);
@@ -58,7 +58,7 @@ function getFromKingstone(pISBN) {
 			var link = $("#team .row .media-heading a").eq(0);
 			var targetUrl = $(link).attr("href");
 				
-			console.log("Target URL is: " + targetUrl);
+			//console.log("Target URL is: " + targetUrl);
 			request(domain + targetUrl, function (error, response, body) {
 				if (!error) {
 					var $ = cheerio.load(body);
@@ -105,6 +105,67 @@ function getFromKingstone(pISBN) {
 	});
 }
 
+function getFromBooks(pISBN) {
+	var domain = "http://m.books.com.tw";
+	var searchUrl = "/search?key=";
+	var bookObj = {};
+
+	request(domain + searchUrl + pISBN, function (error, response, body) {
+		if (!error) {
+			var $ = cheerio.load(body);
+			var link = $(".main .item a.item-name").eq(0);
+			var targetUrl = $(link).attr("href");
+				
+			//console.log("Target URL is: " + targetUrl);
+			request(targetUrl, function (error, response, body) {
+				if (!error) {
+					var $ = cheerio.load(body);
+					bookObj.Title = $(".main .dt-book h1.item-name").text();
+					bookObj.SubTitle = $(".main .dt-book h2.item-name").text();
+					bookObj.ImageUrl = $(".main .dt-book .img-box img").attr("src");
+					var infos = ent.decode($(".main .intro-wrap section .cont").html()).trim().split("<br>");
+					for(var i = 0; i < infos.length; i++) {
+						var text = infos[i].split("：");
+						if (text.length != 2) continue;
+							var title = text[0].replace(/\s/g,""),
+								content = text[1].trim().replace(/\s+/g," ");
+
+						switch(title) {
+							case "作者":
+								bookObj.Aurthor = content;
+								break;
+							case "ISBN":
+								bookObj.ISBN = content;
+								break;
+							case "出版社":
+								bookObj.Publisher = content;
+								break;
+							case "叢書系列":
+								bookObj.Series = content;
+								break;
+							case "語言":
+								bookObj.Language = content;
+								break;
+							case "規格":
+								bookObj.Spec = content;
+								break;
+							case "出版日期":
+								bookObj.PublishDate = content;
+								break;
+						}
+					}
+					console.log(bookObj);
+				} else {
+					console.log("We’ve encountered an error: " + error);
+				}
+			});
+		} else {
+			console.log("We’ve encountered an error: " + error);
+		}
+	});
+}
+
 pISBN = process.argv[2] || pISBN;
 
 getFromKingstone(pISBN);
+getFromBooks(pISBN);
