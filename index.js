@@ -20,12 +20,12 @@ function getFromKingstone2(pISBN) {
 					var $ = cheerio.load(body);
 					bookObj.Title = $("head meta[property='og:title']").attr("content").replace("-金石堂網路書店", "");
 					bookObj.ImageUrl = $("head meta[property='og:image']").attr("content");
-					var aurthor, isbn, publisher, publishDate, translater;
+					var Author, isbn, publisher, publishDate, translater;
 					var infos = $(".item_info li");
 					infos.each(function(i, info) {
 						var text = $("span", info).text();
 						if (text.indexOf("作者：") != -1) {
-							bookObj.Aurthor = $("em", info).text();
+							bookObj.Author = $("em", info).text();
 						} else if (text.indexOf("ISBN：") != -1) {
 							bookObj.ISBN = $("em", info).text();
 						} else if (text.indexOf("出版社：") != -1) {
@@ -64,7 +64,7 @@ function getFromKingstone(pISBN) {
 					var $ = cheerio.load(body);
 					bookObj.Title = $("#team .media-heading").text();
 					bookObj.ImageUrl = $("#team .pull-left .img-thumbnail").attr("src");
-					bookObj.Aurthor = $("#team .m_author").eq(0).text().trim();
+					bookObj.Author = $("#team .m_author").eq(0).text().trim();
 					bookObj.Publisher = $("#team .m_author").eq(1).text().trim();
 					var infos = ent.decode($("#collapseTwo p").html()).trim().split("<br>");
 					for(var i = 0; i < infos.length; i++) {
@@ -132,7 +132,7 @@ function getFromBooks(pISBN) {
 
 						switch(title) {
 							case "作者":
-								bookObj.Aurthor = content;
+								bookObj.Author = content;
 								break;
 							case "ISBN":
 								bookObj.ISBN = content;
@@ -165,7 +165,38 @@ function getFromBooks(pISBN) {
 	});
 }
 
+function getFromEslite(pISBN) {
+	var domain = "https://mssl.eslite.com";
+	var searchUrl = "/main/GetSearchProduct/";
+	var productUrl = "/main/product/";
+	var bookObj = {};
+
+	request({url:domain + searchUrl + pISBN + ",10,1", tunnel: true}, function (error, response, body) {
+		if (!error) {
+			var info = JSON.parse(body);
+			var productId = info[0].SearchItem[0].ProductID;
+				
+			request(domain + productUrl + productId, function (error, response, body) {
+				if (!error) {
+					var $ = cheerio.load(body);
+					bookObj.Title = $("section.View .BookInfor h3").text().trim();
+					bookObj.ImageUrl = $(".BookViewList li .BookImg img").attr("src");
+					bookObj.Author = $("section.View .BookInfor .Author b").text().trim()
+					bookObj.Publisher = $("section.View .BookInfor .Publish b").text().trim()
+
+					console.log(bookObj);
+				} else {
+					console.log("We’ve encountered an error: " + error);
+				}
+			});
+		} else {
+			console.log("We’ve encountered an error: " + error);
+		}
+	});
+}
+
 pISBN = process.argv[2] || pISBN;
 
 getFromKingstone(pISBN);
 getFromBooks(pISBN);
+getFromEslite(pISBN);
