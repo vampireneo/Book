@@ -3,50 +3,6 @@ var request = require("request"),
 	ent = require('ent'),
 	pISBN = "9789571358512";
 
-function getFromKingstone2(pISBN) {
-	var domain = "http://www.kingstone.com.tw";
-	var searchUrl = "/search/result.asp?q_type=isbn&c_name1=";
-	var bookObj = {};
-
-	request(domain + searchUrl + pISBN, function (error, response, body) {
-		if (!error) {
-			var $ = cheerio.load(body);
-			var link = $("#mainContent ul a.anchor").eq(0);
-			var targetUrl = $(link).attr("href");
-				
-			//console.log("Target URL is: " + targetUrl);
-			request(domain + targetUrl, function (error, response, body) {
-				if (!error) {
-					var $ = cheerio.load(body);
-					bookObj.Title = $("head meta[property='og:title']").attr("content").replace("-金石堂網路書店", "");
-					bookObj.ImageUrl = $("head meta[property='og:image']").attr("content");
-					var Author, isbn, publisher, publishDate, translater;
-					var infos = $(".item_info li");
-					infos.each(function(i, info) {
-						var text = $("span", info).text();
-						if (text.indexOf("作者：") != -1) {
-							bookObj.Author = $("em", info).text();
-						} else if (text.indexOf("ISBN：") != -1) {
-							bookObj.ISBN = $("em", info).text();
-						} else if (text.indexOf("出版社：") != -1) {
-							bookObj.Publisher = $("em", info).text().trim();
-						} else if (text.indexOf("譯者：") != -1) {
-							bookObj.Translater = $("em", info).text().trim();
-						} else if (text.indexOf("出版日：") != -1) {
-							bookObj.PublishDate = $("em", info).text();
-						}
-					});
-					console.log(bookObj);
-				} else {
-					console.log("We’ve encountered an error: " + error);
-				}
-			});
-		} else {
-			console.log("We’ve encountered an error: " + error);
-		}
-	});
-}
-	
 function getFromKingstone(pISBN) {
 	var domain = "http://m.kingstone.com.tw";
 	var searchUrl = "/search.asp?q=";
@@ -224,8 +180,57 @@ function getFromEslite(pISBN) {
 	});
 }
 
+function getFromJointPublishing(pISBN) {
+	var domain = "http://www.jointpublishing.com";
+	var searchUrl = "/Special-Page/search-result.aspx?searchmode=anyword&searchtext=";
+	var bookObj = {};
+
+	request(domain + searchUrl + pISBN, function (error, response, body) {
+		if (!error) {
+			var $ = cheerio.load(body);
+			var link = $("#mainContainer .contentPart div a").eq(0);
+			var targetUrl = $(link).attr("href");
+				
+			//console.log("Target URL is: " + targetUrl);
+			request(targetUrl, function (error, response, body) {
+				if (!error) {
+					var $ = cheerio.load(body);
+					bookObj.Title = $("#mainContainer .bookDetailWrapper .rightDetails .title h1").text();
+					var infos = $("#mainContainer .bookDetailWrapper .rightDetails .details table tr");
+					infos.each(function(i, info) {
+						var text = $("th", info).text();
+						if (text.indexOf("叢書") != -1) {
+							bookObj.Series = $("td", info).text();
+						} else if (text.indexOf("作者") != -1) {
+							bookObj.Author = $("td", info).text();
+						} else if (text.indexOf("譯者") != -1) {
+							bookObj.Translater = $("td", info).text();
+						} else if (text.indexOf("出版社") != -1) {
+							bookObj.Publisher = $("td", info).text();
+						} else if (text.indexOf("出版日期") != -1) {
+							bookObj.PublishDate = $("td", info).text();
+						} else if (text.indexOf("ISBN") != -1) {
+							bookObj.ISBN = $("td", info).text();
+						} else if (text.indexOf("語言") != -1) {
+							bookObj.Language = $("td", info).text();
+						} else if (text.indexOf("頁數") != -1) {
+							bookObj.Pages = $("td", info).text();
+						}
+					});
+					console.log(bookObj);
+				} else {
+					console.log("We’ve encountered an error: " + error);
+				}
+			});
+		} else {
+			console.log("We’ve encountered an error: " + error);
+		}
+	});
+}
+
 pISBN = process.argv[2] || pISBN;
 
 getFromKingstone(pISBN);
 getFromBooks(pISBN);
 getFromEslite(pISBN);
+getFromJointPublishing(pISBN);
