@@ -1,5 +1,6 @@
 var request = require("request"),
 	cheerio = require("cheerio"),
+	Q = require("q"),
 	ent = require('ent'),
 	pISBN = "9789571358512";
 
@@ -7,6 +8,7 @@ function getFromKingstone(pISBN) {
 	var domain = "http://m.kingstone.com.tw";
 	var searchUrl = "/search.asp?q=";
 	var bookObj = {};
+	var deferred = Q.defer();
 
 	request(domain + searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
@@ -50,22 +52,30 @@ function getFromKingstone(pISBN) {
 									break;
 							}
 						}
-						console.log(bookObj);
+						//console.log(bookObj);
+						deferred.resolve(bookObj);
 					} else {
-						console.log("We’ve encountered an error: " + error);
+						//console.log("We’ve encountered an error: " + error);
+						//deferred.reject(error);
+						deferred.resolve(bookObj);
 					}
 				});
 			}
+			else deferred.resolve(bookObj);
 		} else {
-			console.log("We’ve encountered an error: " + error);
+			//console.log("We’ve encountered an error: " + error);
+			//deferred.reject(error);
+			deferred.resolve(bookObj);
 		}
 	});
+	return deferred.promise;
 }
 
 function getFromBooks(pISBN) {
 	var domain = "http://m.books.com.tw";
 	var searchUrl = "/search?key=";
 	var bookObj = {};
+	var deferred = Q.defer();
 
 	request(domain + searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
@@ -111,22 +121,30 @@ function getFromBooks(pISBN) {
 									break;
 							}
 						}
-						console.log(bookObj);
+						//console.log(bookObj);
+						deferred.resolve(bookObj);
 					} else {
-						console.log("We’ve encountered an error: " + error);
+						//console.log("We’ve encountered an error: " + error);
+						//deferred.reject(error);
+						deferred.resolve(bookObj);
 					}
 				});
 			}
+			else deferred.resolve(bookObj);
 		} else {
-			console.log("We’ve encountered an error: " + error);
+			//console.log("We’ve encountered an error: " + error);
+			//deferred.reject(error);
+			deferred.resolve(bookObj);
 		}
 	});
+	return deferred.promise;
 }
 
 function getFromEslite(pISBN) {
 	var domain = "http://www.eslite.com/";
 	var searchUrl = "Search_BW.aspx?query=";
 	var bookObj = {};
+	var deferred = Q.defer();
 
 	request({url:domain + searchUrl + pISBN, tunnel: true}, function (error, response, body) {
 		if (!error) {
@@ -173,69 +191,87 @@ function getFromEslite(pISBN) {
 							}
 						});
 
-						console.log(bookObj);
+						//console.log(bookObj);
+						deferred.resolve(bookObj);
 					} else {
-						console.log("We’ve encountered an error: " + error);
+						//console.log("We’ve encountered an error: " + error);
+						//deferred.reject(error);
+						deferred.resolve(bookObj);
 					}
 				});
 			}
+			else deferred.resolve(bookObj);
 		} else {
-			console.log("We’ve encountered an error: " + error);
+			//console.log("We’ve encountered an error: " + error);
+			//deferred.reject(error);
+			deferred.resolve(bookObj);
 		}
 	});
+	return deferred.promise;
 }
 
 function getFromJointPublishing(pISBN) {
 	var domain = "http://www.jointpublishing.com";
 	var searchUrl = "/Special-Page/search-result.aspx?searchmode=anyword&searchtext=";
 	var bookObj = {};
+	var deferred = Q.defer();
 
 	request(domain + searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
 			var $ = cheerio.load(body);
 			var link = $("#mainContainer .contentPart div a").eq(0);
-			var targetUrl = $(link).attr("href");
-				
-			//console.log("Target URL is: " + targetUrl);
-			request(targetUrl, function (error, response, body) {
-				if (!error) {
-					var $ = cheerio.load(body);
-					bookObj.Title = $("#mainContainer .bookDetailWrapper .rightDetails .title h1").text();
-					var infos = $("#mainContainer .bookDetailWrapper .rightDetails .details table tr");
-					infos.each(function(i, info) {
-						var text = $("th", info).text();
-						if (text.indexOf("叢書") != -1) {
-							bookObj.Series = $("td", info).text();
-						} else if (text.indexOf("作者") != -1) {
-							bookObj.Author = $("td", info).text();
-						} else if (text.indexOf("譯者") != -1) {
-							bookObj.Translater = $("td", info).text();
-						} else if (text.indexOf("出版社") != -1) {
-							bookObj.Publisher = $("td", info).text();
-						} else if (text.indexOf("出版日期") != -1) {
-							bookObj.PublishDate = $("td", info).text();
-						} else if (text.indexOf("ISBN") != -1) {
-							bookObj.ISBN = $("td", info).text();
-						} else if (text.indexOf("語言") != -1) {
-							bookObj.Language = $("td", info).text();
-						} else if (text.indexOf("頁數") != -1) {
-							bookObj.Pages = $("td", info).text();
-						}
-					});
-					console.log(bookObj);
-				} else {
-					console.log("We’ve encountered an error: " + error);
-				}
-			});
+			if (link.length > 0) {
+				var targetUrl = $(link).attr("href");
+					
+				//console.log("Target URL is: " + targetUrl);
+				request(targetUrl, function (error, response, body) {
+					if (!error) {
+						var $ = cheerio.load(body);
+						bookObj.Title = $("#mainContainer .bookDetailWrapper .rightDetails .title h1").text();
+						var infos = $("#mainContainer .bookDetailWrapper .rightDetails .details table tr");
+						infos.each(function(i, info) {
+							var text = $("th", info).text();
+							if (text.indexOf("叢書") != -1) {
+								bookObj.Series = $("td", info).text();
+							} else if (text.indexOf("作者") != -1) {
+								bookObj.Author = $("td", info).text();
+							} else if (text.indexOf("譯者") != -1) {
+								bookObj.Translater = $("td", info).text();
+							} else if (text.indexOf("出版社") != -1) {
+								bookObj.Publisher = $("td", info).text();
+							} else if (text.indexOf("出版日期") != -1) {
+								bookObj.PublishDate = $("td", info).text();
+							} else if (text.indexOf("ISBN") != -1) {
+								bookObj.ISBN = $("td", info).text();
+							} else if (text.indexOf("語言") != -1) {
+								bookObj.Language = $("td", info).text();
+							} else if (text.indexOf("頁數") != -1) {
+								bookObj.Pages = $("td", info).text();
+							}
+						});
+						//console.log(bookObj);
+						deferred.resolve(bookObj);
+					} else {
+						//console.log("We’ve encountered an error: " + error);
+						//deferred.reject(error);
+						deferred.resolve(bookObj);
+					}
+				});
+			}
+			else deferred.resolve(bookObj);
 		} else {
-			console.log("We’ve encountered an error: " + error);
+			//console.log("We’ve encountered an error: " + error);
+			//deferred.reject(error);
+			deferred.resolve(bookObj);
 		}
 	});
+	return deferred.promise;
 }
 
 function getFromCommercialPress(pISBN) {
 	var searchUrl = "http://www.cp1897.com.hk/product_info.php?BookId=";
 	var bookObj = {};
+	var deferred = Q.defer();
 
 	request(searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
@@ -274,24 +310,39 @@ function getFromCommercialPress(pISBN) {
 				}
 			});
 
-			console.log(bookObj);
+			//console.log(bookObj);
+			//deferred.resolve(bookObj);
+			deferred.resolve(bookObj);
 		} else {
-			console.log("We’ve encountered an error: " + error);
+			//console.log("We’ve encountered an error: " + error);
+			//deferred.reject(error);
+			deferred.resolve(bookObj);
 		}
 	});
+	return deferred.promise;
 }
 
 pISBN = process.argv[2] || pISBN;
 
 /*
-*/
 getFromKingstone(pISBN);
 getFromBooks(pISBN);
 getFromEslite(pISBN);
 getFromJointPublishing(pISBN);
 getFromCommercialPress(pISBN);
+*/
 
+//getFromBooks(pISBN);
 
+Q.all([getFromKingstone(pISBN), getFromEslite(pISBN), getFromBooks(pISBN), getFromJointPublishing(pISBN), getFromCommercialPress(pISBN)])
+.spread(function(x, y, z, a, b) {
+	console.dir(x);
+	console.dir(y);
+	console.dir(z);
+	console.dir(a);
+	console.dir(b);
+})
+.done();
 
 
 
