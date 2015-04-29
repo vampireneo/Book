@@ -2,6 +2,7 @@ var request = require("request"),
 	cheerio = require("cheerio"),
 	Q = require("q"),
 	ent = require('ent'),
+	merge = require('deepmerge'),
 	pISBN = "9789571358512";
 
 function getFromKingstone(pISBN) {
@@ -324,23 +325,9 @@ function getFromCommercialPress(pISBN) {
 
 pISBN = process.argv[2] || pISBN;
 
-/*
-getFromKingstone(pISBN);
-getFromBooks(pISBN);
-getFromEslite(pISBN);
-getFromJointPublishing(pISBN);
-getFromCommercialPress(pISBN);
-*/
-
-//getFromBooks(pISBN);
-
 Q.all([getFromKingstone(pISBN), getFromEslite(pISBN), getFromBooks(pISBN), getFromJointPublishing(pISBN), getFromCommercialPress(pISBN)])
 .spread(function(x, y, z, a, b) {
-	console.dir(x);
-	console.dir(y);
-	console.dir(z);
-	console.dir(a);
-	console.dir(b);
+	console.dir(merge(x, a, b, y, z));
 })
 .done();
 
