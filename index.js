@@ -1,9 +1,12 @@
-var request = require("request"),
+var express = require('express'),
+	request = require("request"),
 	cheerio = require("cheerio"),
 	Q = require("q"),
 	ent = require('ent'),
 	merge = require('deepmerge'),
-	pISBN = "9789571358512";
+	pISBN = "9789571358512",
+	app = express(),
+	portNo = 3000;
 
 function getFromKingstone(pISBN) {
 	var domain = "http://m.kingstone.com.tw";
@@ -21,7 +24,7 @@ function getFromKingstone(pISBN) {
 				request(domain + targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
-						bookObj.Title = [$("#team .media-heading").text()];
+						bookObj.Title = [$("#team .media-heading").text().trim()];
 						bookObj.ImageUrl = [$("#team .pull-left .img-thumbnail").attr("src")];
 						bookObj.Author = [$("#team .m_author").eq(0).text().trim()];
 						bookObj.Publisher = [$("#team .m_author").eq(1).text().trim()];
@@ -88,15 +91,15 @@ function getFromBooks(pISBN) {
 				request(targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
-						bookObj.Title = [$(".main .dt-book h1.item-name").text()];
-						bookObj.SubTitle = [$(".main .dt-book h2.item-name").text()];
+						bookObj.Title = [$(".main .dt-book h1.item-name").text().trim()];
+						bookObj.SubTitle = [$(".main .dt-book h2.item-name").text().trim()];
 						bookObj.ImageUrl = [$(".main .dt-book .img-box img").attr("src")];
 						var infos = ent.decode($(".main .intro-wrap section .cont").html()).trim().split("<br>");
 						for(var i = 0; i < infos.length; i++) {
 							var text = infos[i].split("：");
 							if (text.length != 2) continue;
-								var title = text[0].replace(/\s/g,""),
-									content = text[1].trim().replace(/\s+/g," ");
+								var title = text[0].replace(/\s/g,"").trim(),
+									content = text[1].trim().replace(/\s+/g," ").trim();
 
 							switch(title) {
 								case "作者":
@@ -188,7 +191,7 @@ function getFromEslite(pISBN) {
 						infos.each(function(i, info) {
 							var text = $("span",info).eq(0).text();
 							if (text.indexOf("頁數") != -1) {
-								bookObj.Pages = [$("span",info).eq(1).text()];
+								bookObj.Pages = [$("span",info).eq(1).text().trim()];
 							}
 						});
 
@@ -228,26 +231,27 @@ function getFromJointPublishing(pISBN) {
 				request(targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
-						bookObj.Title = [$("#mainContainer .bookDetailWrapper .rightDetails .title h1").text()];
+						bookObj.Title = [$("#mainContainer .bookDetailWrapper .rightDetails .title h1").text().trim()];
 						var infos = $("#mainContainer .bookDetailWrapper .rightDetails .details table tr");
 						infos.each(function(i, info) {
 							var text = $("th", info).text();
+							var content = $("td", info).text().trim();
 							if (text.indexOf("叢書") != -1) {
-								bookObj.Series = [$("td", info).text()];
+								bookObj.Series = [content];
 							} else if (text.indexOf("作者") != -1) {
-								bookObj.Author = [$("td", info).text()];
+								bookObj.Author = [content];
 							} else if (text.indexOf("譯者") != -1) {
-								bookObj.Translater = [$("td", info).text()];
+								bookObj.Translater = [content];
 							} else if (text.indexOf("出版社") != -1) {
-								bookObj.Publisher = [$("td", info).text()];
+								bookObj.Publisher = [content];
 							} else if (text.indexOf("出版日期") != -1) {
-								bookObj.PublishDate = [$("td", info).text()];
+								bookObj.PublishDate = [content];
 							} else if (text.indexOf("ISBN") != -1) {
-								bookObj.ISBN = [$("td", info).text()];
+								bookObj.ISBN = [content];
 							} else if (text.indexOf("語言") != -1) {
-								bookObj.Language = [$("td", info).text()];
+								bookObj.Language = [content];
 							} else if (text.indexOf("頁數") != -1) {
-								bookObj.Pages = [$("td", info).text()];
+								bookObj.Pages = [content];
 							}
 						});
 						//console.log(bookObj);
@@ -323,13 +327,30 @@ function getFromCommercialPress(pISBN) {
 	return deferred.promise;
 }
 
-pISBN = process.argv[2] || pISBN;
+//pISBN = process.argv[2] || pISBN;
 
-Q.all([getFromKingstone(pISBN), getFromEslite(pISBN), getFromBooks(pISBN), getFromJointPublishing(pISBN), getFromCommercialPress(pISBN)])
-.spread(function(x, y, z, a, b) {
-	console.dir(merge(x, merge(y, merge(z, merge(a, b)))));
-})
-.done();
+/*
+*/
 
+// /app.param('id', /^\d+$/);
 
+app.get('/isbn/:id([0-9]+)', function(req, res){
+	pISBN = req.params.id;
 
+	console.log("Get book info with isbn " + pISBN);
+
+	Q.all([getFromKingstone(pISBN), getFromEslite(pISBN), getFromBooks(pISBN), getFromJointPublishing(pISBN), getFromCommercialPress(pISBN)])
+	.spread(function(x, y, z, a, b) {
+		//console.dir(merge(x, merge(y, merge(z, merge(a, b)))));
+		var result = merge(x, merge(y, merge(z, merge(a, b))));
+		res.json(result);
+	})
+	.done();
+  //res.send('hello world');
+});
+
+app.listen(portNo);
+console.log("Listening port " + portNo);
+
+/*
+*/
