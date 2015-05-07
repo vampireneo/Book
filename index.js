@@ -349,8 +349,20 @@ app.get('/isbn/:id([0-9]+)', function(req, res){
   //res.send('hello world');
 });
 
-app.listen(portNo);
-console.log("Listening port " + portNo);
+app.get('/isbn/', function(req, res){
+  res.redirect('/isbn/' + pISBN);
+});
 
-/*
-*/
+app.get('/', function (req, res) {
+  //res.send('Hello World!');
+  res.redirect('/isbn/' + pISBN);
+});
+
+var server = app.listen(portNo, function () {
+
+  var host = server.address().address;
+  var port = server.address().port;
+
+  console.log('Listening at http://%s:%s', host, port);
+
+});
