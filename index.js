@@ -6,7 +6,7 @@ var express = require('express'),
 	merge = require('deepmerge'),
 	pISBN = "9789571358512",
 	app = express(),
-	portNo = 80;
+	portNo = process.env.PORT || 3000;
 
 function getFromKingstone(pISBN) {
 	var domain = "http://m.kingstone.com.tw";
