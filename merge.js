@@ -6,14 +6,16 @@ module.exports = function merge (target, src) {
         target = target || []
         dst = dst.concat(target)
         src.forEach(function(e, i) {
+            //console.log(e);
+            //console.log(typeof e);
             if (typeof target[i] === 'undefined') {
                 if (target.indexOf(e) === -1) {
                     dst.push(e)
                 }
-            } else if (typeof e === 'object') {
+            } else if (typeof e === 'object' && !(e instanceof Date)) {
                 dst[i] = merge(target[i], e)
             } else {
-                if (target.indexOf(e) === -1) {
+                if ((!(e instanceof Date) && target.indexOf(e) === -1) || ((e instanceof Date) && target.map(Number).indexOf(+e) === -1)) {
                     dst.push(e)
                 }
             }

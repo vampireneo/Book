@@ -1,6 +1,7 @@
 var express = require('express'),
 	request = require("request"),
 	cheerio = require("cheerio"),
+	moment = require('moment'),
 	Q = require("q"),
 	ent = require('ent'),
 	merge = require('./merge.js'),
@@ -13,7 +14,7 @@ function getFromKingstone(pISBN) {
 	var bookObj = {};
 	var deferred = Q.defer();
 
-	console.log("get url: " + domain + searchUrl + pISBN);
+	//console.log("get url: " + domain + searchUrl + pISBN);
 	request(domain + searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
 			var $ = cheerio.load(body);
@@ -21,7 +22,7 @@ function getFromKingstone(pISBN) {
 			var targetUrl = $(link).attr("href");
 				
 			if (link.length > 0) {
-				console.log("get url: " + domain + targetUrl);
+				//console.log("get url: " + domain + targetUrl);
 				request(domain + targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
@@ -54,14 +55,14 @@ function getFromKingstone(pISBN) {
 									bookObj.Spec = [content];
 									break;
 								case "出版日":
-									bookObj.PublishDate = [content];
+									bookObj.PublishDate = [moment(content,"YYYY/MM/DD").toDate()];
 									break;
 							}
 						}
 						//console.log(bookObj);
 						deferred.resolve(bookObj);
 					} else {
-						console.log("We’ve encountered an error: " + error);
+						//console.log("We’ve encountered an error: " + error);
 						//deferred.reject(error);
 						deferred.resolve(bookObj);
 					}
@@ -69,7 +70,7 @@ function getFromKingstone(pISBN) {
 			}
 			else deferred.resolve(bookObj);
 		} else {
-			console.log("We’ve encountered an error: " + error);
+			//console.log("We’ve encountered an error: " + error);
 			//deferred.reject(error);
 			deferred.resolve(bookObj);
 		}
@@ -83,7 +84,7 @@ function getFromBooks(pISBN) {
 	var bookObj = {};
 	var deferred = Q.defer();
 
-	console.log("get url: " + domain + searchUrl + pISBN);
+	//console.log("get url: " + domain + searchUrl + pISBN);
 	request(domain + searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
 			var $ = cheerio.load(body);
@@ -91,7 +92,7 @@ function getFromBooks(pISBN) {
 			var targetUrl = $(link).attr("href");
 			
 			if (link.length > 0) {
-				console.log("get url: " + targetUrl);
+				//console.log("get url: " + targetUrl);
 				request(targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
@@ -126,14 +127,14 @@ function getFromBooks(pISBN) {
 									bookObj.Spec = [content];
 									break;
 								case "出版日期":
-									bookObj.PublishDate = [content];
+									bookObj.PublishDate = [moment(content,"YYYY年MM月DD日").toDate()];
 									break;
 							}
 						}
 						//console.log(bookObj);
 						deferred.resolve(bookObj);
 					} else {
-						console.log("We’ve encountered an error: " + error);
+						//console.log("We’ve encountered an error: " + error);
 						//deferred.reject(error);
 						deferred.resolve(bookObj);
 					}
@@ -141,7 +142,7 @@ function getFromBooks(pISBN) {
 			}
 			else deferred.resolve(bookObj);
 		} else {
-			console.log("We’ve encountered an error: " + error);
+			//console.log("We’ve encountered an error: " + error);
 			//deferred.reject(error);
 			deferred.resolve(bookObj);
 		}
@@ -180,7 +181,7 @@ function getFromEslite(pISBN) {
 							} else if (text.indexOf("出版社") != -1) {
 								bookObj.Publisher = [$("a", info).eq(0).text().trim()];
 							} else if (text.indexOf("出版日期") != -1) {
-								bookObj.PublishDate = [text.split("／")[1].trim()];
+								bookObj.PublishDate = [moment(text.split("／")[1].trim(),"YYYY/MM/DD").toDate()];
 							} else if (text.indexOf("商品語言") != -1) {
 								bookObj.Language = [text.split("／")[1].trim()];
 							} else if (text.indexOf("裝訂") != -1) {
@@ -252,13 +253,13 @@ function getFromJointPublishing(pISBN) {
 							} else if (text.indexOf("出版社") != -1) {
 								bookObj.Publisher = [content];
 							} else if (text.indexOf("出版日期") != -1) {
-								bookObj.PublishDate = [content];
+								bookObj.PublishDate = [moment(content,"YYYY/MM/DD").toDate()];
 							} else if (text.indexOf("ISBN") != -1) {
 								bookObj.ISBN = [content];
 							} else if (text.indexOf("語言") != -1) {
 								bookObj.Language = [content];
 							} else if (text.indexOf("頁數") != -1) {
-								bookObj.Pages = [content];
+								bookObj.Pages = [content.replace(/頁/g,"").trim()];
 							}
 						});
 						//console.log(bookObj);
@@ -310,7 +311,7 @@ function getFromCommercialPress(pISBN) {
 				var text = $("td.productLabel", info).text();
 				var value = $("td.productDesc", info).text().trim();
 				if (text.indexOf("出版日期") != -1) {
-					bookObj.PublishDate = [value];
+					bookObj.PublishDate = [moment(value,"YYYY年MM月").toDate()];
 				} else if (text.indexOf("語言版本") != -1) {
 					bookObj.Language = [value];
 				} else if (text.indexOf("頁數") != -1) {
