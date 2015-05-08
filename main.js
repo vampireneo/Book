@@ -25,6 +25,7 @@ function getFromKingstone(pISBN) {
 				request(domain + targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
+						bookObj.source = [domain + targetUrl];
 						bookObj.Title = [$("#team .media-heading").text().trim()];
 						bookObj.ImageUrl = [$("#team .pull-left .img-thumbnail").attr("src")];
 						bookObj.Author = [$("#team .m_author").eq(0).text().trim()];
@@ -94,6 +95,7 @@ function getFromBooks(pISBN) {
 				request(targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
+						bookObj.source = [targetUrl];
 						bookObj.Title = [$(".main .dt-book h1.item-name").text().trim()];
 						bookObj.SubTitle = [$(".main .dt-book h2.item-name").text().trim()];
 						bookObj.ImageUrl = [$(".main .dt-book .img-box img").attr("src").replace(/http:\/\/im2.book.com.tw\/image\/getImage\?i=/,'').replace(/&v=.*/,'')];
@@ -164,6 +166,7 @@ function getFromEslite(pISBN) {
 				request(domain + targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
+						bookObj.source = [domain + targetUrl];
 						bookObj.Title = [$("#content h1 span").eq(0).text().trim()];
 						bookObj.SubTitle = [$("#content h1 span").eq(1).text().trim()];
 						bookObj.ImageUrl = [$("#mainlink img").attr("src")];
@@ -234,6 +237,7 @@ function getFromJointPublishing(pISBN) {
 				request(targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
+						bookObj.source = [targetUrl];
 						bookObj.Title = [$("#mainContainer .bookDetailWrapper .rightDetails .title h1").text().trim()];
 						var infos = $("#mainContainer .bookDetailWrapper .rightDetails .details table tr");
 						infos.each(function(i, info) {
@@ -284,7 +288,7 @@ function getFromCommercialPress(pISBN) {
 	request(searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
 			var $ = cheerio.load(body);
-
+			bookObj.source = [searchUrl + pISBN];
 			bookObj.Title = [$("#mainPanel #rightPanel #productInfo_table td.productName").text().replace(/[《》]/gi,"")];
 			var infos = $("#mainPanel #rightPanel #productInfo_table tr");
 			infos.each(function(i, info) {
@@ -310,7 +314,7 @@ function getFromCommercialPress(pISBN) {
 				} else if (text.indexOf("語言版本") != -1) {
 					bookObj.Language = [value];
 				} else if (text.indexOf("頁數") != -1) {
-					bookObj.Pages = [value];
+					bookObj.Pages = [value.replace(/頁/g,"").trim()];
 				} else if (text.indexOf("裝幀") != -1) {
 					bookObj.Spec = [value];
 				} else if (text.indexOf("叢書/系列") != -1) {
