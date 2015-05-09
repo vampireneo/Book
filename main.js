@@ -49,7 +49,7 @@ function getFromKingstone(pISBN) {
 									bookObj.Translater = [content];
 									break;
 								case "語言":
-									bookObj.Language = [content];
+									bookObj.Language = [content.replace("中文繁體", "繁體中文")];
 									break;
 								case "規格":
 									bookObj.Spec = [content];
@@ -124,7 +124,9 @@ function getFromBooks(pISBN) {
 									bookObj.Language = [content];
 									break;
 								case "規格":
-									bookObj.Spec = [content];
+									var contents = content.split("/");
+									bookObj.Spec = [contents[0].trim()];
+									bookObj.Pages = [contents[1].replace("頁","").trim()];
 									break;
 								case "出版日期":
 									bookObj.PublishDate = [moment(content,"YYYY年MM月DD日").toDate()];
@@ -183,7 +185,7 @@ function getFromEslite(pISBN) {
 							} else if (text.indexOf("出版日期") != -1) {
 								bookObj.PublishDate = [moment(text.split("／")[1].trim(),"YYYY/MM/DD").toDate()];
 							} else if (text.indexOf("商品語言") != -1) {
-								bookObj.Language = [text.split("／")[1].trim()];
+								bookObj.Language = [text.split("／")[1].trim().replace("中文/繁體", "繁體中文")];
 							} else if (text.indexOf("裝訂") != -1) {
 								bookObj.Spec = [text.split("／")[1].trim()];
 							}
@@ -257,9 +259,11 @@ function getFromJointPublishing(pISBN) {
 							} else if (text.indexOf("ISBN") != -1) {
 								bookObj.ISBN = [content];
 							} else if (text.indexOf("語言") != -1) {
-								bookObj.Language = [content];
+								bookObj.Language = [content.replace("中文(繁)", "繁體中文")];
 							} else if (text.indexOf("頁數") != -1) {
-								bookObj.Pages = [content.replace(/頁/g,"").trim()];
+								var page = content.replace(/頁/g,"").trim();
+								if (page != "0")
+									bookObj.Pages = [page];
 							}
 						});
 						//console.log(bookObj);
@@ -313,7 +317,7 @@ function getFromCommercialPress(pISBN) {
 				if (text.indexOf("出版日期") != -1) {
 					bookObj.PublishDate = [moment(value,"YYYY年MM月").toDate()];
 				} else if (text.indexOf("語言版本") != -1) {
-					bookObj.Language = [value];
+					bookObj.Language = [value.replace("中文(繁)", "繁體中文")];
 				} else if (text.indexOf("頁數") != -1) {
 					bookObj.Pages = [value.replace(/頁/g,"").trim()];
 				} else if (text.indexOf("裝幀") != -1) {
