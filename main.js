@@ -20,7 +20,7 @@ function getFromKingstone(pISBN) {
 			var $ = cheerio.load(body);
 			var link = $("#team .row .media-heading a").eq(0);
 			var targetUrl = $(link).attr("href");
-				
+
 			if (link.length > 0) {
 				//console.log("get url: " + domain + targetUrl);
 				request(domain + targetUrl, function (error, response, body) {
@@ -90,7 +90,7 @@ function getFromBooks(pISBN) {
 			var $ = cheerio.load(body);
 			var link = $(".main .item a.item-name").eq(0);
 			var targetUrl = $(link).attr("href");
-			
+
 			if (link.length > 0) {
 				//console.log("get url: " + targetUrl);
 				request(targetUrl, function (error, response, body) {
@@ -235,7 +235,7 @@ function getFromJointPublishing(pISBN) {
 			var link = $("#mainContainer .contentPart div a").eq(0);
 			if (link.length > 0) {
 				var targetUrl = $(link).attr("href");
-					
+
 				//console.log("Target URL is: " + targetUrl);
 				request(targetUrl, function (error, response, body) {
 					if (!error) {
@@ -342,6 +342,9 @@ function getFromCommercialPress(pISBN) {
 	});
 	return deferred.promise;
 }
+
+exports.getFromKingstone = getFromKingstone;
+exports.getFromBooks = getFromBooks;
 
 exports.start = function(portNo) {
 	app.get('/isbn/:id([0-9]+)', function(req, res){
