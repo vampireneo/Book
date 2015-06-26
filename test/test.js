@@ -128,7 +128,10 @@ describe('ReadingFunc', function(){
 			it('should fail to get the data of the book "以小勝大"', function(done){
 				Q.all(commercialPress.getByISBN("9789571358512"))
 				.then(function(value) {
-					if (value.hasOwnProperty("Title")) return done("Data should not be found!");
+					if (value.Title == []) return done("Title is empty.");
+					if (value.Title[0] != '以小勝大──弱者如何找到優勢，反敗為勝？') return done("Title does not match.");
+					if (value.hasOwnProperty("ImageUrl")) return done("Data should have no book cover image.");
+					if (value.Author[0] != '麥爾坎．葛拉威爾') return done("Author does not match.");
 					done();
 				});
 			});
