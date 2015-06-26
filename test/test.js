@@ -1,7 +1,15 @@
 var assert = require("assert"); // node.js core module
+var Q = require("q");
+
 var merge = require("../merge.js");
 var main = require("../main.js");
-var Q = require("q");
+
+var kingstone = require("../ReadingFunc/Kingstone.js");
+var books = require("../ReadingFunc/Books.js");
+var eslite = require('../ReadingFunc/Eslite.js');
+var jointPublishing = require('../ReadingFunc/JointPublishing.js');
+var commercialPress = require('../ReadingFunc/CommercialPress.js');
+
 
 describe('Merge', function() {
 	it('[] + [] should retrun []', function() {
@@ -43,28 +51,98 @@ describe('Merge', function() {
 });
 
 describe('Main', function(){
-  describe('getFromKingstone(pISBN)', function(){
-    it('should get the correct data of the book "以小勝大"', function(done){
-      Q.all(main.getFromKingstone("9789571358512"))
-      .then(function(value) {
-        if (value.Title == []) return done("Title is empty.");
-        if (value.Title[0] != '以小勝大：弱者如何找到優勢，反敗為勝？大開眼界：葛拉威爾的奇想搜尋你內心的關鍵字：Google最熱門的自我成長課程！幫助你創造健康、快樂、成功的人生，在工作、生活上脫胎換骨！') return done("Title does not match.");
-        if (value.ImageUrl[0] != 'http://cdn.kingstone.com.tw/book/images/product/20117/2011770967705/2011770967705b.jpg') return done("Book cover image does not match.");
-        if (value.Author[0] != '麥爾坎．葛拉威爾') return done("Author does not match.");
-        done();
-      });
-    })
-  })
-  describe('getFromBooks(pISBN)', function(){
-    it('should get the correct data of the book "以小勝大"', function(done){
-      Q.all(main.getFromBooks("9789571358512"))
-      .then(function(value) {
-        if (value.Title == []) return done("Title is empty.");
-        if (value.Title[0] != '以小勝大：弱者如何找到優勢，反敗為勝？') return done("Title does not match.");
-        if (value.ImageUrl[0] != 'http://www.books.com.tw/img/001/062/01/0010620158.jpg') return done("Book cover image does not match.");
-        if (value.Author[0] != '麥爾坎．葛拉威爾') return done("Author does not match.");
-        done();
-      });
-    })
-  })
-})
+	it('should test something here');
+});
+
+describe('ReadingFunc', function(){
+	describe('Kingstone', function(){
+		describe('getByISBN()', function(){
+			it('should get the correct data of the book "以小勝大"', function(done){
+				Q.all(kingstone.getByISBN("9789571358512"))
+				.then(function(value) {
+					if (value.Title == []) return done("Title is empty.");
+					if (value.Title[0] != '以小勝大：弱者如何找到優勢，反敗為勝？大開眼界：葛拉威爾的奇想搜尋你內心的關鍵字：Google最熱門的自我成長課程！幫助你創造健康、快樂、成功的人生，在工作、生活上脫胎換骨！') return done("Title does not match.");
+					if (value.ImageUrl[0] != 'http://cdn.kingstone.com.tw/book/images/product/20117/2011770967705/2011770967705b.jpg') return done("Book cover image does not match.");
+					if (value.Author[0] != '麥爾坎．葛拉威爾') return done("Author does not match.");
+					done();
+				});
+			});
+		});
+	});
+
+	describe('Books', function(){
+		describe('getByISBN()', function(){
+			it('should get the correct data of the book "以小勝大"', function(done){
+				Q.all(books.getByISBN("9789571358512"))
+				.then(function(value) {
+					if (value.Title == []) return done("Title is empty.");
+	        if (value.Title[0] != '以小勝大：弱者如何找到優勢，反敗為勝？') return done("Title does not match.");
+	        if (value.ImageUrl[0] != 'http://www.books.com.tw/img/001/062/01/0010620158.jpg') return done("Book cover image does not match.");
+	        if (value.Author[0] != '麥爾坎．葛拉威爾') return done("Author does not match.");
+					done();
+				});
+			});
+		});
+	});
+
+	describe('Eslite', function(){
+		describe('getByISBN()', function(){
+			it('should get the correct data of the book "以小勝大"', function(done){
+				Q.all(eslite.getByISBN("9789571358512"))
+				.then(function(value) {
+					if (value.Title == []) return done("Title is empty.");
+					if (value.Title[0] != '以小勝大: 弱者如何找到優勢, 反敗為勝?') return done("Title does not match.");
+					if (value.ImageUrl[0] != 'http://pic.eslite.com/Upload/Product/201312/m/635228661509612548.jpg') return done("Book cover image does not match.");
+					if (value.Author[0] != '麥爾坎．葛拉威爾') return done("Author does not match.");
+					done();
+				});
+			});
+		});
+	});
+
+	describe('Joint Publishing', function(){
+		describe('getByISBN()', function(){
+			it('should fail to get the data of the book "以小勝大"', function(done){
+				Q.all(jointPublishing.getByISBN("9789571358512"))
+				.then(function(value) {
+					if (value.hasOwnProperty("Title")) return done("Data should not be found!");
+					done();
+				});
+			});
+			it('should get the correct data of the book "武道狂之詩（卷十四）"', function(done){
+				Q.all(jointPublishing.getByISBN("9789881278517"))
+				.then(function(value) {
+					if (!value.hasOwnProperty("Title")) return done("Data should have title!");
+					if (value.Title == []) return done("Title is empty.");
+					if (value.Title[0] != '武道狂之詩（卷十四）──山．火．海') return done("Title does not match.");
+					if (value.hasOwnProperty("ImageUrl")) return done("Data should have no book cover image.");
+					if (value.Author[0] != '喬靖夫') return done("Author does not match.");
+					done();
+				});
+			});
+		});
+	});
+
+	describe('Commercial Press', function(){
+		describe('getByISBN()', function(){
+			it('should fail to get the data of the book "以小勝大"', function(done){
+				Q.all(commercialPress.getByISBN("9789571358512"))
+				.then(function(value) {
+					if (value.hasOwnProperty("Title")) return done("Data should not be found!");
+					done();
+				});
+			});
+			it('should get the correct data of the book "武道狂之詩（卷十四）"', function(done){
+				Q.all(commercialPress.getByISBN("9789881278517"))
+				.then(function(value) {
+					if (!value.hasOwnProperty("Title")) return done("Data should have title!");
+					if (value.Title == []) return done("Title is empty.");
+					if (value.Title[0] != '武道狂之詩（卷十四）──山．火．海') return done("Title does not match.");
+					if (value.hasOwnProperty("ImageUrl")) return done("Data should have no book cover image.");
+					if (value.Author[0] != '喬靖夫') return done("Author does not match.");
+					done();
+				});
+			});
+		});
+	});
+});
