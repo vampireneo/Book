@@ -34,9 +34,9 @@ function getFromKingstone(pISBN) {
 						var infos = ent.decode($("#collapseTwo p").html()).trim().split("<br>");
 						for(var i = 0; i < infos.length; i++) {
 							var text = infos[i].split("：");
-							if (text.length != 2) continue;
-								var title = text[0],
-									content = text[1].trim();
+							if (text.length !== 2) continue;
+							var title = text[0],
+								content = text[1].trim();
 
 							switch(title) {
 								case "ISBN":
@@ -68,7 +68,9 @@ function getFromKingstone(pISBN) {
 					}
 				});
 			}
-			else deferred.resolve(bookObj);
+			else {
+				deferred.resolve(bookObj);
+			}
 		} else {
 			//console.log("We’ve encountered an error: " + error);
 			//deferred.reject(error);
@@ -103,7 +105,7 @@ function getFromBooks(pISBN) {
 						var infos = ent.decode($(".main .intro-wrap section .cont").html()).trim().split("<br>");
 						for(var i = 0; i < infos.length; i++) {
 							var text = infos[i].split("：");
-							if (text.length != 2) continue;
+							if (text.length !== 2) continue;
 								var title = text[0].replace(/\s/g,"").trim(),
 									content = text[1].trim().replace(/\s+/g," ").trim().replace(/‧/g,"．");
 
@@ -199,7 +201,7 @@ function getFromEslite(pISBN) {
 						infos = $("#content .C_box table[id*='dlSpec'] td");
 						infos.each(function(i, info) {
 							var text = $("span",info).eq(0).text();
-							if (text.indexOf("頁數") != -1) {
+							if (text.indexOf("頁數") !== -1) {
 								bookObj.Pages = [$("span",info).eq(1).text().trim()];
 							}
 						});
@@ -311,7 +313,7 @@ function getFromCommercialPress(pISBN) {
 					}
 				});
 
-				var infos = $("#mainPanel #rightPanel #extraInfo_table tr");
+				infos = $("#mainPanel #rightPanel #extraInfo_table tr");
 				infos.each(function(i, info) {
 					var text = $("td.productLabel", info).text();
 					var value = $("td.productDesc", info).text().trim();
@@ -377,4 +379,4 @@ exports.start = function(portNo) {
 	  console.log('Listening at http://%s:%s', host, port);
 
 	});
-}
+};
