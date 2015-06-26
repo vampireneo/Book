@@ -5,60 +5,54 @@ var Q = require("q"),
   ent = require('ent');
 
 exports.getByISBN = function(pISBN) {
-  var domain = "http://www.jointpublishing.com";
-	var searchUrl = "/Special-Page/search-result.aspx?searchmode=anyword&searchtext=";
+  var searchUrl = "http://www.cp1897.com.hk/product_info.php?BookId=";
 	var bookObj = {};
 	var deferred = Q.defer();
 
-	request(domain + searchUrl + pISBN, function (error, response, body) {
+	request(searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
 			var $ = cheerio.load(body);
-			var link = $("#mainContainer .contentPart div a").eq(0);
-			if (link.length > 0) {
-				var targetUrl = $(link).attr("href");
+			bookObj.source = [searchUrl + pISBN];
+			bookObj.Title = [$("#mainPanel #rightPanel #productInfo_table td.productName").text().replace(/[《》]/gi,"")];
+			if (bookObj.Title[0].indexOf("對不起！") === -1) {
+				var infos = $("#mainPanel #rightPanel #productInfo_table tr");
+				infos.each(function(i, info) {
+					var text = $("td.productLabel", info).text();
+					var value = $("td.productDesc", info).text().trim();
+					if (text.indexOf("作者") != -1) {
+						bookObj.Author = [value];
+					} else if (text.indexOf("譯者") != -1) {
+						bookObj.Translater = [value];
+					} else if (text.indexOf("出版社") != -1) {
+						bookObj.Publisher = [value];
+					} else if (text.indexOf("ISBN") != -1) {
+						bookObj.ISBN = [value];
+					}
+				});
 
-				//console.log("Target URL is: " + targetUrl);
-				request(targetUrl, function (error, response, body) {
-					if (!error) {
-						var $ = cheerio.load(body);
-						bookObj.source = [targetUrl];
-						bookObj.Title = [$("#mainContainer .bookDetailWrapper .rightDetails .title h1").text().trim()];
-						var infos = $("#mainContainer .bookDetailWrapper .rightDetails .details table tr");
-						infos.each(function(i, info) {
-							var text = $("th", info).text();
-							var content = $("td", info).text().trim();
-							if (text.indexOf("叢書") !== -1) {
-								bookObj.Series = [content];
-							} else if (text.indexOf("作者") !== -1) {
-								bookObj.Author = [content];
-							} else if (text.indexOf("譯者") !== -1) {
-								bookObj.Translater = [content];
-							} else if (text.indexOf("出版社") !== -1) {
-								bookObj.Publisher = [content];
-							} else if (text.indexOf("出版日期") !== -1) {
-								bookObj.PublishDate = [moment(content,"YYYY/MM/DD").toDate()];
-							} else if (text.indexOf("ISBN") !== -1) {
-								bookObj.ISBN = [content];
-							} else if (text.indexOf("語言") !== -1) {
-								bookObj.Language = [content.replace("中文(繁)", "繁體中文")];
-							} else if (text.indexOf("頁數") !== -1) {
-								var page = content.replace(/頁/g,"").trim();
-								if (page !== "0")
-									bookObj.Pages = [page];
-							}
-						});
-						//console.log(bookObj);
-						deferred.resolve(bookObj);
-					} else {
-						//console.log("We’ve encountered an error: " + error);
-						//deferred.reject(error);
-						deferred.resolve(bookObj);
+				infos = $("#mainPanel #rightPanel #extraInfo_table tr");
+				infos.each(function(i, info) {
+					var text = $("td.productLabel", info).text();
+					var value = $("td.productDesc", info).text().trim();
+					if (text.indexOf("出版日期") != -1) {
+						bookObj.PublishDate = [moment(value,"YYYY年MM月").toDate()];
+					} else if (text.indexOf("語言版本") != -1) {
+						bookObj.Language = [value.replace("中文(繁)", "繁體中文")];
+					} else if (text.indexOf("頁數") != -1) {
+						bookObj.Pages = [value.replace(/頁/g,"").trim()];
+					} else if (text.indexOf("裝幀") != -1) {
+						bookObj.Spec = [value];
+					} else if (text.indexOf("叢書/系列") != -1) {
+						bookObj.Series = [value];
 					}
 				});
 			}
 			else {
-				deferred.resolve(bookObj);
+				bookObj = {};
 			}
+			//console.log(bookObj);
+			//deferred.resolve(bookObj);
+			deferred.resolve(bookObj);
 		} else {
 			//console.log("We’ve encountered an error: " + error);
 			//deferred.reject(error);
