@@ -60,8 +60,9 @@ describe('ReadingFunc', function(){
 			it('should get the correct data of the book "以小勝大"', function(done){
 				Q.all(kingstone.getByISBN("9789571358512"))
 				.then(function(value) {
+					//console.log(value);
 					if (value.Title == []) return done("Title is empty.");
-					if (value.Title[0] != '以小勝大：弱者如何找到優勢，反敗為勝？大開眼界：葛拉威爾的奇想搜尋你內心的關鍵字：Google最熱門的自我成長課程！幫助你創造健康、快樂、成功的人生，在工作、生活上脫胎換骨！') return done("Title does not match.");
+					if (value.Title[0] != '以小勝大：弱者如何找到優勢，反敗為勝？') return done("Title does not match.");
 					if (value.ImageUrl[0] != 'http://cdn.kingstone.com.tw/book/images/product/20117/2011770967705/2011770967705b.jpg') return done("Book cover image does not match.");
 					if (value.Author[0] != '麥爾坎．葛拉威爾') return done("Author does not match.");
 					done();

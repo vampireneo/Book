@@ -18,7 +18,6 @@ exports.getByISBN = function(pISBN) {
 			var targetUrl = $(link).attr("href");
 
 			if (link.length > 0) {
-				//console.log("get url: " + targetUrl);
 				request(targetUrl, function (error, response, body) {
 					if (!error) {
 						$ = cheerio.load(body);
@@ -61,11 +60,8 @@ exports.getByISBN = function(pISBN) {
 									break;
 							}
 						}
-						//console.log(bookObj);
 						deferred.resolve(bookObj);
 					} else {
-						//console.log("We’ve encountered an error: " + error);
-						//deferred.reject(error);
 						deferred.resolve(bookObj);
 					}
 				});
@@ -74,8 +70,6 @@ exports.getByISBN = function(pISBN) {
 				deferred.resolve(bookObj);
 			}
 		} else {
-			//console.log("We’ve encountered an error: " + error);
-			//deferred.reject(error);
 			deferred.resolve(bookObj);
 		}
 	});
