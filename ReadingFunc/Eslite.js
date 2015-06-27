@@ -55,12 +55,8 @@ exports.getByISBN = function(pISBN) {
 								bookObj.Pages = [$("span",info).eq(1).text().trim()];
 							}
 						});
-
-						//console.log(bookObj);
 						deferred.resolve(bookObj);
 					} else {
-						//console.log("We’ve encountered an error: " + error);
-						//deferred.reject(error);
 						deferred.resolve(bookObj);
 					}
 				});
@@ -69,8 +65,6 @@ exports.getByISBN = function(pISBN) {
 				deferred.resolve(bookObj);
 			}
 		} else {
-			//console.log("We’ve encountered an error: " + error);
-			//deferred.reject(error);
 			deferred.resolve(bookObj);
 		}
 	});

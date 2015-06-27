@@ -10,7 +10,6 @@ exports.getByISBN = function(pISBN) {
 	var bookObj = {};
 	var deferred = Q.defer();
 
-	//console.log("get url: " + domain + searchUrl + pISBN);
 	request(domain + searchUrl + pISBN, function (error, response, body) {
 		if (!error) {
 			var $ = cheerio.load(body);
@@ -18,12 +17,11 @@ exports.getByISBN = function(pISBN) {
 			var targetUrl = $(link).attr("href");
 
 			if (link.length > 0) {
-				//console.log("get url: " + domain + targetUrl);
 				request(domain + targetUrl, function (error, response, body) {
 					if (!error) {
 						$ = cheerio.load(body);
 						bookObj.source = [domain + targetUrl];
-						bookObj.Title = [$("#team .media-heading").text().trim()];
+						bookObj.Title = [$("#team .media-heading").eq(0).text().trim()];
 						bookObj.ImageUrl = [$("#team .pull-left .img-thumbnail").attr("src")];
 						bookObj.Author = [$("#team .m_author").eq(0).text().trim()];
 						bookObj.Publisher = [$("#team .m_author").eq(1).text().trim()];
@@ -55,11 +53,8 @@ exports.getByISBN = function(pISBN) {
 									break;
 							}
 						}
-						//console.log(bookObj);
 						deferred.resolve(bookObj);
 					} else {
-						//console.log("We’ve encountered an error: " + error);
-						//deferred.reject(error);
 						deferred.resolve(bookObj);
 					}
 				});
@@ -68,8 +63,6 @@ exports.getByISBN = function(pISBN) {
 				deferred.resolve(bookObj);
 			}
 		} else {
-			//console.log("We’ve encountered an error: " + error);
-			//deferred.reject(error);
 			deferred.resolve(bookObj);
 		}
 	});

@@ -1,18 +1,17 @@
 var express = require('express'),
-	request = require("request"),
-	cheerio = require("cheerio"),
-	moment = require('moment'),
 	Q = require("q"),
-	ent = require('ent'),
-	merge = require('./merge.js'),
-	pISBN = "9789571358512",
-	app = express(),
-	kingstone = require('./ReadingFunc/Kingstone.js'),
+	merge = require('./merge.js');
+
+var kingstone = require('./ReadingFunc/Kingstone.js'),
 	books = require('./ReadingFunc/Books.js'),
 	eslite = require('./ReadingFunc/Eslite.js'),
 	jointPublishing = require('./ReadingFunc/JointPublishing.js'),
 	commercialPress = require('./ReadingFunc/CommercialPress.js');
 
+var pISBN = "9789571358512",
+	app = express();
+
+/*
 // just an idea
 function getFromBookStore(domain, searchUrl, pISBN, readFunc) {
 	var bookObj = {};
@@ -28,6 +27,7 @@ function getFromBookStore(domain, searchUrl, pISBN, readFunc) {
 	});
 	return deferred.promise;
 }
+*/
 
 exports.start = function(portNo) {
 	app.get('/isbn/:id([0-9]+)', function(req, res){
@@ -36,8 +36,11 @@ exports.start = function(portNo) {
 		console.log("Get book info with isbn " + isbn);
 
 		Q.all([kingstone.getByISBN(isbn), books.getByISBN(isbn), eslite.getByISBN(isbn), jointPublishing.getByISBN(isbn), commercialPress.getByISBN(isbn)])
-		.spread(function(x, y, z, a, b) {
-			var result = merge(x, merge(y, merge(z, merge(a, b))));
+		.spread(function() {
+			var args = [].slice.call(arguments);
+			var result = args.reduce(function(a,b) {
+				return merge(a,b);
+			});
 			res.json(result);
 		})
 		.done();
@@ -48,7 +51,6 @@ exports.start = function(portNo) {
 	});
 
 	app.get('/', function (req, res) {
-	  //res.send('Hello World!');
 	  res.redirect('/isbn/' + pISBN);
 	});
 
