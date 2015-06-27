@@ -28,7 +28,9 @@ exports.getByISBN = function(pISBN) {
 						var infos = ent.decode($("#collapseTwo p").html()).trim().split("<br>");
 						for(var i = 0; i < infos.length; i++) {
 							var text = infos[i].split("：");
-							if (text.length !== 2) continue;
+							if (text.length !== 2) {
+                continue;
+              }
 							var title = text[0],
 								content = text[1].trim();
 
