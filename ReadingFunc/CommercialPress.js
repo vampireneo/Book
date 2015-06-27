@@ -1,8 +1,7 @@
 var Q = require("q"),
   cheerio = require("cheerio"),
   request = require("request"),
-  moment = require('moment'),
-  ent = require('ent');
+  moment = require('moment');
 
 exports.getByISBN = function(pISBN) {
   var searchUrl = "http://www.cp1897.com.hk/product_info.php?BookId=";
@@ -19,13 +18,13 @@ exports.getByISBN = function(pISBN) {
 				infos.each(function(i, info) {
 					var text = $("td.productLabel", info).text();
 					var value = $("td.productDesc", info).text().trim();
-					if (text.indexOf("作者") != -1) {
+					if (text.indexOf("作者") !== -1) {
 						bookObj.Author = [value];
-					} else if (text.indexOf("譯者") != -1) {
+					} else if (text.indexOf("譯者") !== -1) {
 						bookObj.Translater = [value];
-					} else if (text.indexOf("出版社") != -1) {
+					} else if (text.indexOf("出版社") !== -1) {
 						bookObj.Publisher = [value];
-					} else if (text.indexOf("ISBN") != -1) {
+					} else if (text.indexOf("ISBN") !== -1) {
 						bookObj.ISBN = [value];
 					}
 				});
@@ -34,15 +33,15 @@ exports.getByISBN = function(pISBN) {
 				infos.each(function(i, info) {
 					var text = $("td.productLabel", info).text();
 					var value = $("td.productDesc", info).text().trim();
-					if (text.indexOf("出版日期") != -1) {
-						bookObj.PublishDate = [moment(value,"YYYY年MM月").toDate()];
-					} else if (text.indexOf("語言版本") != -1) {
+					if (text.indexOf("出版日期") !== -1) {
+            bookObj.PublishDate = [moment(value,"YYYY年MM月").toDate()];
+					} else if (text.indexOf("語言版本") !== -1) {
 						bookObj.Language = [value.replace("中文(繁)", "繁體中文")];
-					} else if (text.indexOf("頁數") != -1) {
+					} else if (text.indexOf("頁數") !== -1) {
 						bookObj.Pages = [value.replace(/頁/g,"").trim()];
-					} else if (text.indexOf("裝幀") != -1) {
+					} else if (text.indexOf("裝幀") !== -1) {
 						bookObj.Spec = [value];
-					} else if (text.indexOf("叢書/系列") != -1) {
+					} else if (text.indexOf("叢書/系列") !== -1) {
 						bookObj.Series = [value];
 					}
 				});
@@ -50,12 +49,8 @@ exports.getByISBN = function(pISBN) {
 			else {
 				bookObj = {};
 			}
-			//console.log(bookObj);
-			//deferred.resolve(bookObj);
 			deferred.resolve(bookObj);
 		} else {
-			//console.log("We’ve encountered an error: " + error);
-			//deferred.reject(error);
 			deferred.resolve(bookObj);
 		}
 	});
