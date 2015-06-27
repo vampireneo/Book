@@ -1,8 +1,7 @@
 var Q = require("q"),
   cheerio = require("cheerio"),
   request = require("request"),
-  moment = require('moment'),
-  ent = require('ent');
+  moment = require('moment');
 
 exports.getByISBN = function(pISBN) {
   var domain = "http://www.eslite.com/";
