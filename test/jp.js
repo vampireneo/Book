@@ -15,20 +15,17 @@ var readingFuncTimeOut = process.env.TEST_TIMEOUT||10000;
 describe('ReadingFunc', function(){
 	this.timeout(readingFuncTimeOut);
 
-	describe('Commercial Press', function(){
+	describe('Joint Publishing', function(){
 		describe('getByISBN()', function(){
 			it('should fail to get the data of the book "以小勝大"', function(done){
-				Q.all(commercialPress.getByISBN("9789571358512"))
+				Q.all(jointPublishing.getByISBN("9789571358512"))
 				.then(function(value) {
-					if (value.Title == []) return done("Title is empty.");
-					if (value.Title[0] != '以小勝大──弱者如何找到優勢，反敗為勝？') return done("Title does not match.");
-					if (value.hasOwnProperty("ImageUrl")) return done("Data should have no book cover image.");
-					if (value.Author[0] != '麥爾坎．葛拉威爾') return done("Author does not match.");
+					if (value.hasOwnProperty("Title")) return done("Data should not be found!");
 					done();
 				});
 			});
 			it('should get the correct data of the book "武道狂之詩（卷十四）"', function(done){
-				Q.all(commercialPress.getByISBN("9789881278517"))
+				Q.all(jointPublishing.getByISBN("9789881278517"))
 				.then(function(value) {
 					if (!value.hasOwnProperty("Title")) return done("Data should have title!");
 					if (value.Title == []) return done("Title is empty.");
