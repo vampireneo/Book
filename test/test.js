@@ -25,6 +25,12 @@ describe('Merge', function() {
   it('[1] + [2] should retrun [1,2]', function() {
 		assert.deepEqual([1,2],merge([1], [2]));
 	});
+	it('[1] + [2,3] should retrun [1,2,3]', function() {
+		assert.deepEqual([1,2,3],merge([1], [2,3]));
+	});
+	it('[1] + [1,2] should retrun [1,2]', function() {
+		assert.deepEqual([1,2],merge([1], [1,2]));
+	});
   it('[1,2] + [2,3] should retrun [1,2,3]', function() {
 		assert.deepEqual([1,2,3],merge([1,2], [2,3]));
 	});
@@ -48,6 +54,9 @@ describe('Merge', function() {
 	});
   it('{a:[1], c: "a"} + {b:[2], a:[2]} should retrun {a:[1,2], b:[2], c: "a"}', function() {
 		assert.deepEqual({a:[1,2], b:[2], c: "a"},merge({a:[1], c: "a"}, {b:[2], a:[2]}));
+	});
+	it('[1] + [2,3,{a:1}] should retrun [1,2,3,{a:1}]', function() {
+		assert.deepEqual([1,2,3,{a:1}],merge([1], [2,3,{a:1}]));
 	});
 });
 
