@@ -35,6 +35,27 @@ describe('ReadingFunc', function(){
 					done();
 				});
 			});
+			it('should get the correct data of the book "挑戰你的神邏輯！"', function(done){
+				Q.all(jointPublishing.getByISBN("9789869165174"))
+				.then(function(value) {
+					if (!value.hasOwnProperty("Title")) return done("Data should have title!");
+					if (value.Title == []) return done("Title is empty.");
+					if (value.Title[0] != '挑戰你的神邏輯！') return done("Title does not match.");
+					if (!value.hasOwnProperty("Series")) return done("Data should have series!");
+					done();
+				});
+			});
+			it('should get the correct data of the book "世界頂級狙擊手"', function(done){
+				Q.all(jointPublishing.getByISBN("9787538741643"))
+				.then(function(value) {
+					if (!value.hasOwnProperty("Title")) return done("Data should have title!");
+					if (value.Title == []) return done("Title is empty.");
+					if (value.Title[0] != '世界頂級狙擊手') return done("Title does not match.");
+					if (!value.hasOwnProperty("Translater")) return done("Data should have translater!");
+					if (!value.hasOwnProperty("Pages")) return done("Data should have pages!");
+					done();
+				});
+			});
 		});
 	});
 });
