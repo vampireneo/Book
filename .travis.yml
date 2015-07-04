@@ -1,7 +1,13 @@
 language: node_js
 node_js:
-  - "0.12"
-  - "iojs"
+- '0.12'
+- iojs
 before_install:
-  - "npm -g install mocha"
-after_script: NODE_ENV=test istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info && rm -rf ./coverage
+- npm -g install mocha
+after_script: NODE_ENV=test istanbul cover ./node_modules/mocha/bin/_mocha --report
+  lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  && ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info
+  && rm -rf ./coverage
+notifications:
+  slack:
+    secure: S8GEdfDWdVWvWT2KRDI30Il1kD16n/kQg7s/JOSrYgj7HA2YdLNxKVMAagnR3HsLOxZLaSmCDrQ6bRsgAFf54RV4KPQjC16L5EmDp1A1E/5ShmyoeFPoglASzo722SAEZzdVtQ24D7PAsW0eS7phTSi2yakn17YONzTnpy6pRww=
