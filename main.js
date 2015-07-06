@@ -8,8 +8,7 @@ var kingstone = require('./ReadingFunc/Kingstone.js'),
 	jointPublishing = require('./ReadingFunc/JointPublishing.js'),
 	commercialPress = require('./ReadingFunc/CommercialPress.js');
 
-var pISBN = "9789571358512",
-	app = express();
+var pISBN = "9789571358512";
 
 /*
 // just an idea
@@ -29,7 +28,9 @@ function getFromBookStore(domain, searchUrl, pISBN, readFunc) {
 }
 */
 
-exports.start = function(portNo) {
+var createServer = function(portNo) {
+	var app = express();
+
 	app.get('/isbn/:id([0-9]+)', function(req, res){
 		var isbn = req.params.id;
 
@@ -60,6 +61,9 @@ exports.start = function(portNo) {
 	  var port = server.address().port;
 
 	  console.log('Listening at http://%s:%s', host, port);
-
 	});
+
+	return server;
 };
+
+module.exports = createServer;
