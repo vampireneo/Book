@@ -20,8 +20,10 @@
   "devDependencies": {
     "codeclimate-test-reporter": "^0.1.0",
     "coveralls": "^2.11.2",
+    "http-status": "^0.2.0",
     "istanbul": "^0.3.17",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "superagent": "^1.2.0"
   },
   "repository": {
     "type": "git",

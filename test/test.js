@@ -1,8 +1,10 @@
 var assert = require("assert"); // node.js core module
 var Q = require("q");
+var superagent = require('superagent');
+var status = require('http-status');
 
 var merge = require("../merge.js");
-var main = require("../main.js");
+var server = require("../main.js");
 
 var kingstone = require("../ReadingFunc/Kingstone.js");
 var books = require("../ReadingFunc/Books.js");
@@ -60,6 +62,42 @@ describe('Merge', function() {
 	});
 });
 
-describe('Main', function(){
-	it('should test something here');
+describe('Server', function(){
+	var readingFuncTimeOut = process.env.TEST_TIMEOUT||10000;
+	this.timeout(readingFuncTimeOut);
+
+	describe('Test the server object', function() {
+		var app;
+
+		before(function() {
+			app = server(3000);
+		});
+
+		after(function() {
+			app.close();
+  	});
+
+		it('returns result should have a correct ISBN', function(done) {
+			superagent.get('http://localhost:3000/isbn/9789571358512').end(function(err, res) {
+				assert.ifError(err);
+				assert.equal(res.status, status.OK);
+				var result = JSON.parse(res.text);
+				//assert.deepEqual({ user: 'test' }, result);
+				assert.equal("9789571358512", result.ISBN[0]);
+				done();
+			});
+		});
+
+	it('returns default ISBN should be 9789571358512', function(done) {
+		superagent.get('http://localhost:3000/').end(function(err, res) {
+			assert.ifError(err);
+			assert.equal(res.status, status.OK);
+			var result = JSON.parse(res.text);
+			//assert.deepEqual({ user: 'test' }, result);
+			assert.equal("9789571358512", result.ISBN[0]);
+			done();
+		});
+	});
+
+	});
 });

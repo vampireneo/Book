@@ -1,4 +1,4 @@
-var main = require('./main.js'),
+var server = require('./main.js'),
 	portNo = process.env.PORT || 3000;
 
-main.start(portNo);
+server(portNo);
