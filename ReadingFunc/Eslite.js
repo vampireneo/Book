@@ -44,7 +44,7 @@ exports.getByISBN = function(pISBN) {
 						infos = $("#content .C_box p").text().split("\n");
 						for(var i = 0; i < infos.length; i++) {
 							if (infos[i].indexOf("ISBN 13") > -1) {
-								bookObj.ISBN = [infos[i].split("／")[1].trim()];
+								bookObj.ISBN = infos[i].split("／")[1].trim();
 							}
 						}
 						infos = $("#content .C_box table[id*='dlSpec'] td");

@@ -36,7 +36,7 @@ exports.getByISBN = function(pISBN) {
 							} else if (text.indexOf("出版日期") !== -1) {
 								bookObj.PublishDate = [moment(content,"YYYY/MM/DD").toDate()];
 							} else if (text.indexOf("ISBN") !== -1) {
-								bookObj.ISBN = [content];
+								bookObj.ISBN = content;
 							} else if (text.indexOf("語言") !== -1) {
 								bookObj.Language = [content.replace("中文(繁)", "繁體中文")];
 							} else if (text.indexOf("頁數") !== -1) {

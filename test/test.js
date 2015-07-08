@@ -13,6 +13,7 @@ var jointPublishing = require('../ReadingFunc/JointPublishing.js');
 var commercialPress = require('../ReadingFunc/CommercialPress.js');
 
 var readingFuncTimeOut = process.env.TEST_TIMEOUT||10000;
+var showData = process.env.SHOW_DATA||false;
 
 describe('Merge', function() {
 	it('[] + [] should retrun []', function() {
@@ -83,7 +84,7 @@ describe('Server', function(){
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
 				//assert.deepEqual({ user: 'test' }, result);
-				assert.equal("9789571358512", result.ISBN[0]);
+				assert.equal("9789571358512", result.ISBN);
 				done();
 			});
 		});
@@ -94,7 +95,7 @@ describe('Server', function(){
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
 				//assert.deepEqual({ user: 'test' }, result);
-				assert.equal("9789571358512", result.ISBN[0]);
+				assert.equal("9789571358512", result.ISBN);
 				done();
 			});
 		});
@@ -105,7 +106,7 @@ describe('Server', function(){
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
 				//assert.deepEqual({ user: 'test' }, result);
-				assert.equal("9789571358512", result.ISBN[0]);
+				assert.equal("9789571358512", result.ISBN);
 				done();
 			});
 		});
