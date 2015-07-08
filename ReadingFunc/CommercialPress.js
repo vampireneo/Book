@@ -25,7 +25,7 @@ exports.getByISBN = function(pISBN) {
 					} else if (text.indexOf("出版社") !== -1) {
 						bookObj.Publisher = [value];
 					} else if (text.indexOf("ISBN") !== -1) {
-						bookObj.ISBN = [value];
+						bookObj.ISBN = value;
 					}
 				});
 

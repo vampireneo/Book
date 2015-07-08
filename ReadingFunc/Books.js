@@ -39,7 +39,7 @@ exports.getByISBN = function(pISBN) {
 									bookObj.Author = [content];
 									break;
 								case "ISBN":
-									bookObj.ISBN = [content];
+									bookObj.ISBN = content;
 									break;
 								case "出版社":
 									bookObj.Publisher = [content];
