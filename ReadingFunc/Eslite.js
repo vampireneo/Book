@@ -20,25 +20,25 @@ exports.getByISBN = function(pISBN) {
 				request(domain + targetUrl, function (error, response, body) {
 					if (!error) {
 						var $ = cheerio.load(body);
-						bookObj.source = [domain + targetUrl];
-						bookObj.Title = [$("#content h1 span").eq(0).text().trim()];
-						bookObj.SubTitle = [$("#content h1 span").eq(1).text().trim()];
-						bookObj.ImageUrl = [$("#mainlink img").attr("src")];
+						bookObj.source = domain + targetUrl;
+						bookObj.Title = $("#content h1 span").eq(0).text().trim();
+						bookObj.SubTitle = $("#content h1 span").eq(1).text().trim();
+						bookObj.ImageUrl = $("#mainlink img").attr("src");
 						var infos = $("#content .PI_info h3, #content .PI_info h2");
 						infos.each(function(i, info) {
 							var text = $(info).text();
 							if (text.indexOf("作者") !== -1) {
-								bookObj.Author = [$("a", info).eq(0).text().trim()];
+								bookObj.Author = $("a", info).eq(0).text().trim();
 							} else if (text.indexOf("譯者") !== -1) {
-								bookObj.Translater = [$("a", info).eq(0).text().trim()];
+								bookObj.Translater = $("a", info).eq(0).text().trim();
 							} else if (text.indexOf("出版社") !== -1) {
-								bookObj.Publisher = [$("a", info).eq(0).text().trim()];
+								bookObj.Publisher = $("a", info).eq(0).text().trim();
 							} else if (text.indexOf("出版日期") !== -1) {
-								bookObj.PublishDate = [moment(text.split("／")[1].trim(),"YYYY/MM/DD").toDate()];
+								bookObj.PublishDate = moment(text.split("／")[1].trim(),"YYYY/MM/DD").toDate();
 							} else if (text.indexOf("商品語言") !== -1) {
-								bookObj.Language = [text.split("／")[1].trim().replace("中文/繁體", "繁體中文")];
+								bookObj.Language = text.split("／")[1].trim().replace("中文/繁體", "繁體中文");
 							} else if (text.indexOf("裝訂") !== -1) {
-								bookObj.Spec = [text.split("／")[1].trim()];
+								bookObj.Spec = text.split("／")[1].trim();
 							}
 						});
 						infos = $("#content .C_box p").text().split("\n");
@@ -51,7 +51,7 @@ exports.getByISBN = function(pISBN) {
 						infos.each(function(i, info) {
 							var text = $("span",info).eq(0).text();
 							if (text.indexOf("頁數") !== -1) {
-								bookObj.Pages = [$("span",info).eq(1).text().trim()];
+								bookObj.Pages = $("span",info).eq(1).text().trim();
 							}
 						});
 						deferred.resolve(bookObj);

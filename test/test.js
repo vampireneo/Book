@@ -37,12 +37,12 @@ describe('Merge', function() {
   it('[1,2] + [2,3] should retrun [1,2,3]', function() {
 		assert.deepEqual([1,2,3],merge([1,2], [2,3]));
 	});
-  it('{a:1} + {a:2} should retrun {a:[1,2]}');
-  /*
   it('{a:1} + {a:2} should retrun {a:[1,2]}', function() {
 		assert.deepEqual({a:[1,2]},merge({a:1}, {a:2}));
 	});
-  */
+	it('{a:1} + {a:1} should retrun {a:1}', function() {
+		assert.deepEqual({a:1},merge({a:1}, {a:1}));
+	});
   it('{a:[1]} + {a:[2]} should retrun {a:[1,2]}', function() {
 		assert.deepEqual({a:[1,2]},merge({a:[1]}, {a:[2]}));
 	});
@@ -60,6 +60,24 @@ describe('Merge', function() {
 	});
 	it('[1] + [2,3,{a:1}] should retrun [1,2,3,{a:1}]', function() {
 		assert.deepEqual([1,2,3,{a:1}],merge([1], [2,3,{a:1}]));
+	});
+	it('[1,2,4] + [2,3,{a:1}] should retrun [1,2,3,{a:1}]', function() {
+		assert.deepEqual([1,2,{a:1},3],merge([1,2,4], [2,3,{a:1}]));
+	});
+	it('{title: "abc"} + {title: "def"} should retrun {title: ["abc", "def"]}', function() {
+		assert.deepEqual({title: ["abc", "def"]},merge({title: "abc"}, {title: "def"}));
+	});
+	it('{title: "abc"} + {title: "def"} + {title: "xyz"} should retrun {title: ["abc", "def", "xyz"]}', function() {
+		assert.deepEqual({title: ["abc", "def", "xyz"]},merge(merge({title: "abc"}, {title: "def"}),{title: "xyz"}) );
+	});
+	it('new Date(2013, 3, 4) + new Date(2013, 3, 4) should retrun new Date(2013, 3, 4)', function() {
+		var d = new Date(2013,3,4);
+		assert.deepEqual(d,merge(d, d));
+	});
+	it('new Date(2013, 5, 4) + new Date(2013, 3, 4) should retrun new Date(2013, 3, 4)', function() {
+		var d1 = new Date(2013,3,4);
+		var d2 = new Date(2013,5,4);
+		assert.deepEqual([d1, d2],merge(d1, d2));
 	});
 });
 
@@ -84,6 +102,7 @@ describe('Server', function(){
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
 				//assert.deepEqual({ user: 'test' }, result);
+				//console.log(result);
 				assert.equal("9789571358512", result.ISBN);
 				done();
 			});
