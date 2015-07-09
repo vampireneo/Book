@@ -21,10 +21,10 @@ exports.getByISBN = function(pISBN) {
 				request(targetUrl, function (error, response, body) {
 					if (!error) {
 						$ = cheerio.load(body);
-						bookObj.source = [targetUrl];
-						bookObj.Title = [$(".main .dt-book h1.item-name").text().trim()];
-						bookObj.SubTitle = [$(".main .dt-book h2.item-name").text().trim()];
-						bookObj.ImageUrl = [$(".main .dt-book .img-box img").attr("src").replace(/http:\/\/im2.book.com.tw\/image\/getImage\?i=/,'').replace(/&v=.*/,'')];
+						bookObj.source = targetUrl;
+						bookObj.Title = $(".main .dt-book h1.item-name").text().trim();
+						bookObj.SubTitle = $(".main .dt-book h2.item-name").text().trim();
+						bookObj.ImageUrl = $(".main .dt-book .img-box img").attr("src").replace(/http:\/\/im2.book.com.tw\/image\/getImage\?i=/,'').replace(/&v=.*/,'');
 						var infos = ent.decode($(".main .intro-wrap section .cont").html()).trim().split("<br>");
 						for(var i = 0; i < infos.length; i++) {
 							var text = infos[i].split("：");
@@ -36,27 +36,27 @@ exports.getByISBN = function(pISBN) {
 
 							switch(title) {
 								case "作者":
-									bookObj.Author = [content];
+									bookObj.Author = content;
 									break;
 								case "ISBN":
 									bookObj.ISBN = content;
 									break;
 								case "出版社":
-									bookObj.Publisher = [content];
+									bookObj.Publisher = content;
 									break;
 								case "叢書系列":
-									bookObj.Series = [content];
+									bookObj.Series = content;
 									break;
 								case "語言":
-									bookObj.Language = [content];
+									bookObj.Language = content;
 									break;
 								case "規格":
 									var contents = content.split("/");
-									bookObj.Spec = [contents[0].trim()];
-									bookObj.Pages = [contents[1].replace("頁","").trim()];
+									bookObj.Spec = contents[0].trim();
+									bookObj.Pages = contents[1].replace("頁","").trim();
 									break;
 								case "出版日期":
-									bookObj.PublishDate = [moment(content,"YYYY年MM月DD日").toDate()];
+									bookObj.PublishDate = moment(content,"YYYY年MM月DD日").toDate();
 									break;
 							}
 						}

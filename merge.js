@@ -26,7 +26,23 @@ module.exports = function merge (target, src) {
         }
         Object.keys(src).forEach(function (key) {
             if (typeof src[key] !== 'object' || !src[key]) {
-                dst[key] = src[key];
+                if (!dst[key] || dst[key] === src[key]) {
+                  dst[key] = src[key];
+                } else {
+                  if (Array.isArray(dst[key])) {
+                    if (Array.isArray(src[key])) {
+                      dst[key] = src[key].reduce( function(coll,item){
+                        coll.push( item );
+                        return coll;
+                      }, dst[key] );
+                    } else {
+                      dst[key].push(src[key]);
+                    }
+                  }
+                  else {
+                    dst[key] = [dst[key], src[key]];
+                  }
+                }
             }
             else {
                 if (!target[key]) {
@@ -36,6 +52,13 @@ module.exports = function merge (target, src) {
                 }
             }
         });
+        if (src && src instanceof Date && target && target instanceof Date)
+        {
+          if (target === src)
+            dst = target;
+          else
+            dst = [target, src];
+        }
     }
 
     return dst;
