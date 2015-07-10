@@ -1,25 +1,29 @@
 module.exports = function merge (target, src) {
-    var array = Array.isArray(src);
+    var array = Array.isArray(src) || Array.isArray(target);
     var dst = array && [] || {};
 
     if (array) {
         target = target || [];
         dst = dst.concat(target);
-        src.forEach(function(e, i) {
-            if (typeof target[i] === 'undefined') {
-                if (target.indexOf(e) === -1) {
-                    dst.push(e);
-                }
-            } else if (typeof e === 'object' && !(e instanceof Date)) {
-                dst[i] = merge(target[i], e);
-            } else {
-                if ((!(e instanceof Date) && target.indexOf(e) === -1) || ((e instanceof Date) && target.map(Number).indexOf(+e) === -1)) {
-                    dst.push(e);
-                }
-            }
-        });
+        if (src.forEach) {
+          src.forEach(function(e, i) {
+              if (typeof target[i] === 'undefined') {
+                  if (target.indexOf(e) === -1) {
+                      dst.push(e);
+                  }
+              } else if (typeof e === 'object' && !(e instanceof Date)) {
+                  dst[i] = merge(target[i], e);
+              } else {
+                  if ((!(e instanceof Date) && target.indexOf(e) === -1) || ((e instanceof Date) && target.map(Number).indexOf(+e) === -1)) {
+                      dst.push(e);
+                  }
+              }
+          });
+        } else {
+          dst.push(src);
+        }
     } else {
-        if (target && typeof target === 'object') {
+        if (target && typeof target === 'object' && !Array.isArray(target)) {
             Object.keys(target).forEach(function (key) {
                 dst[key] = target[key];
             });
@@ -45,19 +49,12 @@ module.exports = function merge (target, src) {
                 }
             }
             else {
-                if (!target[key]) {
-                    dst[key] = src[key];
-                } else {
-                    dst[key] = merge(target[key], src[key]);
-                }
+              dst[key] = !target[key] ? src[key] : merge(target[key], src[key]);
             }
         });
         if (src && src instanceof Date && target && target instanceof Date)
         {
-          if (target === src)
-            dst = target;
-          else
-            dst = [target, src];
+          dst = target === src ? target: [target, src];
         }
     }
 
