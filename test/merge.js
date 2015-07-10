@@ -62,6 +62,9 @@ describe('Merge', function() {
 	it('{title: "abc", Author:["Peter", "Paul"]} + {title: "def", Author:["Mary", "May"]} should retrun {title: ["abc", "def"], Author:["Peter", "Paul", "Mary", "May"]}', function() {
 		assert.deepEqual({title: ["abc", "def"], Author:["Peter", "Paul", "Mary", "May"]},merge({title: "abc", Author:["Peter", "Paul"]}, {title: "def", Author:["Mary", "May"]}));
 	});
+	it('{Author:["Peter", "Paul"]} + {Author:"Paul"} should retrun {Author:["Peter", "Paul"]}', function() {
+		assert.deepEqual({Author:["Peter", "Paul"]},merge({Author:["Peter", "Paul"]}, {Author:"Paul"}));
+	});
 	it('new Date(2013, 3, 4) + new Date(2013, 3, 4) should retrun new Date(2013, 3, 4)', function() {
 		var d = new Date(2013,3,4);
 		assert.deepEqual(d,merge(d, d));

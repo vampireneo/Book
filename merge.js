@@ -34,16 +34,10 @@ module.exports = function merge (target, src) {
                   dst[key] = src[key];
                 } else {
                   if (Array.isArray(dst[key])) {
-                    if (Array.isArray(src[key])) {
-                      dst[key] = src[key].reduce( function(coll,item){
-                        coll.push( item );
-                        return coll;
-                      }, dst[key] );
-                    } else {
+                    if (dst[key].indexOf(src[key]) === -1) {
                       dst[key].push(src[key]);
                     }
-                  }
-                  else {
+                  } else {
                     dst[key] = [dst[key], src[key]];
                   }
                 }
