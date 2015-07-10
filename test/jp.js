@@ -32,10 +32,10 @@ describe('ReadingFunc', function(){
 					if (showData) console.log(value);
 					if (value.ISBN !== "9789881278517") return done("ISBN does not match.");
 					if (!value.hasOwnProperty("Title")) return done("Data should have title!");
-					if (value.Title == []) return done("Title is empty.");
-					if (value.Title[0] != '武道狂之詩（卷十四）──山．火．海') return done("Title does not match.");
+					if (value.Title === "") return done("Title is empty.");
+					if (value.Title !== '武道狂之詩（卷十四）──山．火．海') return done("Title does not match.");
 					if (value.hasOwnProperty("ImageUrl")) return done("Data should have no book cover image.");
-					if (value.Author[0] != '喬靖夫') return done("Author does not match.");
+					if (value.Author !== '喬靖夫') return done("Author does not match.");
 					done();
 				});
 			});
@@ -45,8 +45,8 @@ describe('ReadingFunc', function(){
 					if (showData) console.log(value);
 					if (value.ISBN !== "9789869165174") return done("ISBN does not match.");
 					if (!value.hasOwnProperty("Title")) return done("Data should have title!");
-					if (value.Title == []) return done("Title is empty.");
-					if (value.Title[0] != '挑戰你的神邏輯！') return done("Title does not match.");
+					if (value.Title === "") return done("Title is empty.");
+					if (value.Title !== '挑戰你的神邏輯！') return done("Title does not match.");
 					if (!value.hasOwnProperty("Series")) return done("Data should have series!");
 					done();
 				});
@@ -57,8 +57,8 @@ describe('ReadingFunc', function(){
 					if (showData) console.log(value);
 					if (value.ISBN !== "9787538741643") return done("ISBN does not match.");
 					if (!value.hasOwnProperty("Title")) return done("Data should have title!");
-					if (value.Title == []) return done("Title is empty.");
-					if (value.Title[0] != '世界頂級狙擊手') return done("Title does not match.");
+					if (value.Title === "") return done("Title is empty.");
+					if (value.Title !== '世界頂級狙擊手') return done("Title does not match.");
 					if (!value.hasOwnProperty("Translater")) return done("Data should have translater!");
 					if (!value.hasOwnProperty("Pages")) return done("Data should have pages!");
 					done();

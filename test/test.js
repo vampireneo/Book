@@ -89,7 +89,7 @@ describe('Server', function(){
 		var app;
 
 		before(function() {
-			app = server(3000);
+			app = server(3001);
 		});
 
 		after(function() {
