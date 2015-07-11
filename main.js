@@ -1,5 +1,6 @@
 var express = require('express'),
 	Q = require("q"),
+	MongoClient = require('mongodb').MongoClient,
 	merge = require('./merge.js');
 
 var kingstone = require('./ReadingFunc/Kingstone.js'),
@@ -10,23 +11,33 @@ var kingstone = require('./ReadingFunc/Kingstone.js'),
 
 var pISBN = "9789571358512";
 
-/*
-// just an idea
-function getFromBookStore(domain, searchUrl, pISBN, readFunc) {
-	var bookObj = {};
-	var deferred = Q.defer();
+var connectionStr = process.env.BOOKDB || "mongodb://localhost:27017/books";
 
-	request(domain + searchUrl + pISBN, function (error, response, body) {
-		if (!error) {
-			var $ = cheerio.load(body);
-			readFunc(domain, $, bookObj, deferred);
-		} else {
-			deferred.resolve(bookObj);
-		}
-	});
-	return deferred.promise;
-}
-*/
+var findBook = function(isbn, db, callback) {
+  // Get the documents collection
+  var collection = db.collection('books');
+  // Find some documents
+  collection.findOne({_id: isbn}, function(err, docs) {
+    //assert.equal(err, null);
+    //assert.equal(2, docs.length);
+    //console.log("Found the following records");
+    //console.dir(docs);
+    callback(docs);
+  });
+};
+
+var insertDocuments = function(bookObj, db, callback) {
+  // Get the documents collection
+  var collection = db.collection('books');
+  // Insert some documents
+  collection.insert({_id : bookObj.ISBN, searchData: bookObj}, function(err, result) {
+    //assert.equal(err, null);
+    //assert.equal(3, result.result.n);
+    //assert.equal(3, result.ops.length);
+    //console.log("Inserted 3 documents into the document collection");
+    callback(result);
+  });
+};
 
 var createServer = function(portNo) {
 	var app = express();
@@ -36,15 +47,35 @@ var createServer = function(portNo) {
 
 		console.log("Get book info with isbn " + isbn);
 
-		Q.all([kingstone.getByISBN(isbn), books.getByISBN(isbn), eslite.getByISBN(isbn), jointPublishing.getByISBN(isbn), commercialPress.getByISBN(isbn)])
-		.spread(function() {
-			var args = [].slice.call(arguments);
-			var result = args.reduce(function(a,b) {
-				return merge(a,b);
+		var book = {};
+		MongoClient.connect(connectionStr, function(err, db) {
+		  console.log("Connected correctly to server for findBook");
+			findBook(isbn, db, function(docs) {
+				//console.log(docs);
+				if (docs && docs._id && docs._id !== "") {
+					book = docs;
+					res.json(book);
+					db.close();
+				}
+				else {
+					Q.all([kingstone.getByISBN(isbn), books.getByISBN(isbn), eslite.getByISBN(isbn), jointPublishing.getByISBN(isbn), commercialPress.getByISBN(isbn)])
+					.spread(function() {
+						var args = [].slice.call(arguments);
+						var result = args.reduce(function(a,b) {
+							return merge(a,b);
+						});
+						book = result;
+						insertDocuments(result, db, function(result) {
+							//console.log(result);
+							console.log('new record inserted');
+							db.close();
+							res.json(book);
+						});
+					})
+					.done();
+				}
 			});
-			res.json(result);
-		})
-		.done();
+		});
 	});
 
 	app.get('/isbn/', function(req, res){
