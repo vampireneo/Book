@@ -61,12 +61,12 @@ var createServer = function(portNo) {
 					Q.all([kingstone.getByISBN(isbn), books.getByISBN(isbn), eslite.getByISBN(isbn), jointPublishing.getByISBN(isbn), commercialPress.getByISBN(isbn)])
 					.spread(function() {
 						var args = [].slice.call(arguments);
-						var result = args.reduce(function(a,b) {
+						book = args.reduce(function(a,b) {
 							return merge(a,b);
 						});
-						book = result;
-						insertDocuments(result, db, function(result) {
+						insertDocuments(book, db, function(result) {
 							//console.log(result);
+							book = result.ops[0];
 							console.log('new record inserted');
 							db.close();
 							res.json(book);
