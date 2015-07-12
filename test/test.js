@@ -24,7 +24,7 @@ describe('Server', function(){
   	});
 
 		it('returns result should have a correct ISBN', function(done) {
-			superagent.get('http://localhost:3000/isbn/9789571358512').end(function(err, res) {
+			superagent.get('http://localhost:3000/api/isbn/9789571358512').end(function(err, res) {
 				assert.ifError(err);
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
@@ -50,7 +50,7 @@ describe('Server', function(){
 		});
 
 		it('returns default ISBN should be 9789571358512', function(done) {
-			superagent.get('http://localhost:3000/isbn/').end(function(err, res) {
+			superagent.get('http://localhost:3000/api/isbn/').end(function(err, res) {
 				assert.ifError(err);
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);

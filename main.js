@@ -43,21 +43,17 @@ var insertDocuments = function(bookObj, db, callback) {
 var createServer = function(portNo) {
 	var app = express();
 
-	app.get('/isbn/:id([0-9]+)', function(req, res){
+	app.get('/api/isbn/:id([0-9]+)', function(req, res){
 		var pisbn = ISBNParser.parse(req.params.id);
-
 		if (pisbn === null) {
 			res.json("Incorrect ISBN.");
 			return;
 		}
-
 		console.log("Get book info with isbn " + pisbn.asIsbn13());
-
 		var book = {};
 		MongoClient.connect(connectionStr, function(err, db) {
 		  console.log("Connected correctly to server for findBook");
 			findBook(pisbn.asIsbn13(), db, function(docs) {
-				//console.log(docs);
 				if (docs && docs._id && docs._id !== "") {
 					book = docs;
 					res.json(book);
@@ -70,10 +66,8 @@ var createServer = function(portNo) {
 						book = args.reduce(function(a,b) {
 							return merge(a,b);
 						});
-						//console.log(book);
 						if (book.ISBN && !Array.isArray(book.ISBN)) {
 							insertDocuments(book, db, function(result) {
-								//console.log(result);
 								book = result.ops[0];
 								console.log('new record inserted');
 								db.close();
@@ -89,12 +83,12 @@ var createServer = function(portNo) {
 		});
 	});
 
-	app.get('/isbn/', function(req, res){
-	  res.redirect('/isbn/' + defaultISBN);
+	app.get('/api/isbn/', function(req, res){
+	  res.redirect('/api/isbn/' + defaultISBN);
 	});
 
 	app.get('/', function (req, res) {
-	  res.redirect('/isbn/' + defaultISBN);
+	  res.redirect('/api/isbn/' + defaultISBN);
 	});
 
 	var server = app.listen(portNo, function () {
