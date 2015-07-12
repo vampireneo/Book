@@ -1,5 +1,7 @@
 var express = require('express'),
 	Q = require("q"),
+	MongoClient = require('mongodb').MongoClient,
+	ISBNParser = require("./isbn.js"),
 	merge = require('./merge.js');
 
 var kingstone = require('./ReadingFunc/Kingstone.js'),
@@ -8,51 +10,91 @@ var kingstone = require('./ReadingFunc/Kingstone.js'),
 	jointPublishing = require('./ReadingFunc/JointPublishing.js'),
 	commercialPress = require('./ReadingFunc/CommercialPress.js');
 
-var pISBN = "9789571358512";
+var defaultISBN = "9789571358512";
 
-/*
-// just an idea
-function getFromBookStore(domain, searchUrl, pISBN, readFunc) {
-	var bookObj = {};
-	var deferred = Q.defer();
+var connectionStr = process.env.BOOKDB || "mongodb://localhost:27017/books";
 
-	request(domain + searchUrl + pISBN, function (error, response, body) {
-		if (!error) {
-			var $ = cheerio.load(body);
-			readFunc(domain, $, bookObj, deferred);
-		} else {
-			deferred.resolve(bookObj);
-		}
-	});
-	return deferred.promise;
-}
-*/
+var findBook = function(pisbn, db, callback) {
+  // Get the documents collection
+  var collection = db.collection('books');
+  // Find some documents
+  collection.findOne({_id: pisbn}, function(err, docs) {
+    //assert.equal(err, null);
+    //assert.equal(2, docs.length);
+    //console.log("Found the following records");
+    //console.dir(docs);
+    callback(docs);
+  });
+};
+
+var insertDocuments = function(bookObj, db, callback) {
+  // Get the documents collection
+  var collection = db.collection('books');
+  // Insert some documents
+  collection.insert({_id : bookObj.ISBN, searchData: bookObj}, function(err, result) {
+    //assert.equal(err, null);
+    //assert.equal(3, result.result.n);
+    //assert.equal(3, result.ops.length);
+    //console.log("Inserted 3 documents into the document collection");
+    callback(result);
+  });
+};
 
 var createServer = function(portNo) {
 	var app = express();
 
 	app.get('/isbn/:id([0-9]+)', function(req, res){
-		var isbn = req.params.id;
+		var pisbn = ISBNParser.parse(req.params.id);
 
-		console.log("Get book info with isbn " + isbn);
+		if (pisbn === null) {
+			res.json("Incorrect ISBN.");
+			return;
+		}
 
-		Q.all([kingstone.getByISBN(isbn), books.getByISBN(isbn), eslite.getByISBN(isbn), jointPublishing.getByISBN(isbn), commercialPress.getByISBN(isbn)])
-		.spread(function() {
-			var args = [].slice.call(arguments);
-			var result = args.reduce(function(a,b) {
-				return merge(a,b);
+		console.log("Get book info with isbn " + pisbn.asIsbn13());
+
+		var book = {};
+		MongoClient.connect(connectionStr, function(err, db) {
+		  console.log("Connected correctly to server for findBook");
+			findBook(pisbn.asIsbn13(), db, function(docs) {
+				//console.log(docs);
+				if (docs && docs._id && docs._id !== "") {
+					book = docs;
+					res.json(book);
+					db.close();
+				}
+				else {
+					Q.all([kingstone.getByISBN(pisbn.asIsbn13()), books.getByISBN(pisbn.asIsbn13()), eslite.getByISBN(pisbn.asIsbn13()), jointPublishing.getByISBN(pisbn.asIsbn13()), commercialPress.getByISBN(pisbn.asIsbn13())])
+					.spread(function() {
+						var args = [].slice.call(arguments);
+						book = args.reduce(function(a,b) {
+							return merge(a,b);
+						});
+						//console.log(book);
+						if (book.ISBN && !Array.isArray(book.ISBN)) {
+							insertDocuments(book, db, function(result) {
+								//console.log(result);
+								book = result.ops[0];
+								console.log('new record inserted');
+								db.close();
+								res.json(book);
+							});
+						} else {
+							res.json(book);
+						}
+					})
+					.done();
+				}
 			});
-			res.json(result);
-		})
-		.done();
+		});
 	});
 
 	app.get('/isbn/', function(req, res){
-	  res.redirect('/isbn/' + pISBN);
+	  res.redirect('/isbn/' + defaultISBN);
 	});
 
 	app.get('/', function (req, res) {
-	  res.redirect('/isbn/' + pISBN);
+	  res.redirect('/isbn/' + defaultISBN);
 	});
 
 	var server = app.listen(portNo, function () {
