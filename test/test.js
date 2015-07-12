@@ -33,7 +33,7 @@ describe('Server', function(){
 				if (showData) {
 					console.log(result);
 				}
-				assert.equal("9789571358512", result.ISBN);
+				assert.equal("9789571358512", result._id);
 				done();
 			});
 		});
@@ -44,7 +44,7 @@ describe('Server', function(){
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
 				//assert.deepEqual({ user: 'test' }, result);
-				assert.equal("9789571358512", result.ISBN);
+				assert.equal("9789571358512", result._id);
 				done();
 			});
 		});
@@ -55,7 +55,7 @@ describe('Server', function(){
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
 				//assert.deepEqual({ user: 'test' }, result);
-				assert.equal("9789571358512", result.ISBN);
+				assert.equal("9789571358512", result._id);
 				done();
 			});
 		});
