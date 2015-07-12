@@ -24,7 +24,7 @@ describe('Server', function(){
   	});
 
 		it('returns result should have a correct ISBN', function(done) {
-			superagent.get('http://localhost:3000/api/isbn/9789571358512').end(function(err, res) {
+			superagent.get('http://localhost:3000/api/isbn/9789862728345').end(function(err, res) {
 				assert.ifError(err);
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
@@ -33,7 +33,7 @@ describe('Server', function(){
 				if (showData) {
 					console.log(result);
 				}
-				assert.equal("9789571358512", result._id);
+				assert.equal("9789862728345", result._id);
 				done();
 			});
 		});
@@ -60,11 +60,37 @@ describe('Server', function(){
 			});
 		});
 
+		it('able to delete book record with ISBN 9789862728345', function(done) {
+			superagent.del('http://localhost:3000/api/isbn/9789862728345').end(function(err, res) {
+				assert.ifError(err);
+				assert.equal(res.status, status.OK);
+				var result = JSON.parse(res.text);
+				//assert.deepEqual({ user: 'test' }, result);
+				assert.equal("Book deleted.", result);
+				done();
+			});
+		});
+
+		it('returns 400 when delete book record with invalid ISBN', function(done) {
+			superagent.del('http://localhost:3000/api/isbn/5435346').end(function(err, res) {
+				assert.equal(res.status, status.BAD_REQUEST);
+				done();
+			});
+		});
+
+		it('returns 400 if invalid ISBN is found', function(done) {
+			superagent.get('http://localhost:3000/api/isbn/32554325').end(function(err, res) {
+				assert.equal(res.status, status.BAD_REQUEST);
+				done();
+			});
+		});
+
 		it('returns 404 if incorrect url', function(done) {
 			superagent.get('http://localhost:3000/isbbn/').end(function(err, res) {
 				assert.equal(res.status, status.NOT_FOUND);
 				done();
 			});
 		});
+
 	});
 });

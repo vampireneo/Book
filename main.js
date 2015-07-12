@@ -40,15 +40,37 @@ var insertDocuments = function(bookObj, db, callback) {
   });
 };
 
+var deleteDocuments = function(pisbn, db, callback) {
+  var collection = db.collection('books');
+  collection.remove({_id : pisbn}, function(err, result) {
+    callback(result);
+  });
+};
+
 var createServer = function(portNo) {
 	var app = express();
+
+	app.delete('/api/isbn/:id([0-9]+)', function (req, res) {
+		var pisbn = ISBNParser.parse(req.params.id);
+		if (pisbn === null) {
+			res.status(400).send('Incorrect ISBN.');
+			return;
+		}
+		MongoClient.connect(connectionStr, function(err, db) {
+			deleteDocuments(pisbn.asIsbn13(), db, function() {
+				res.json('Book deleted.');
+				db.close();
+			});
+		});
+	});
 
 	app.get('/api/isbn/:id([0-9]+)', function(req, res){
 		var pisbn = ISBNParser.parse(req.params.id);
 		if (pisbn === null) {
-			res.json("Incorrect ISBN.");
+			res.status(400).send('Incorrect ISBN.');
 			return;
 		}
+
 		console.log("Get book info with isbn " + pisbn.asIsbn13());
 		var book = {};
 		MongoClient.connect(connectionStr, function(err, db) {
