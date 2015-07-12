@@ -6,7 +6,7 @@ var Q = require("q"),
 
 exports.getByISBN = function(pISBN) {
   var domain = "http://m.books.com.tw";
-	var searchUrl = "/search?key=";
+	var searchUrl = "/search?cat=BKA&key=";
 	var bookObj = {};
 	var deferred = Q.defer();
 
