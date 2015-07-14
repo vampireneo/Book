@@ -39,7 +39,7 @@ describe('Server', function(){
 		});
 
 		it('returns should returns result of 9789571358512 by default', function(done) {
-			superagent.get('http://localhost:3000/').end(function(err, res) {
+			superagent.get('http://localhost:3000/api/').end(function(err, res) {
 				assert.ifError(err);
 				assert.equal(res.status, status.OK);
 				var result = JSON.parse(res.text);
