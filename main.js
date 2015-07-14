@@ -1,14 +1,14 @@
 var express = require('express'),
 	Q = require("q"),
 	MongoClient = require('mongodb').MongoClient,
-	ISBNParser = require("./isbn.js"),
-	merge = require('./merge.js');
+	ISBNParser = require("./utility/isbn.js"),
+	merge = require('./utility/merge.js');
 
-var kingstone = require('./ReadingFunc/Kingstone.js'),
-	books = require('./ReadingFunc/Books.js'),
-	eslite = require('./ReadingFunc/Eslite.js'),
-	jointPublishing = require('./ReadingFunc/JointPublishing.js'),
-	commercialPress = require('./ReadingFunc/CommercialPress.js');
+var kingstone = require('./bookParser/Kingstone.js'),
+	books = require('./bookParser/Books.js'),
+	eslite = require('./bookParser/Eslite.js'),
+	jointPublishing = require('./bookParser/JointPublishing.js'),
+	commercialPress = require('./bookParser/CommercialPress.js');
 
 var defaultISBN = "9789571358512";
 
@@ -49,6 +49,8 @@ var deleteDocuments = function(pisbn, db, callback) {
 
 var createServer = function(portNo) {
 	var app = express();
+
+	app.use(express.static('public'));
 
 	app.delete('/api/isbn/:id([0-9]+)', function (req, res) {
 		var pisbn = ISBNParser.parse(req.params.id);
@@ -109,8 +111,12 @@ var createServer = function(portNo) {
 	  res.redirect('/api/isbn/' + defaultISBN);
 	});
 
-	app.get('/', function (req, res) {
+	app.get('/api/', function (req, res) {
 	  res.redirect('/api/isbn/' + defaultISBN);
+	});
+
+	app.get('/', function (req, res) {
+	  res.redirect('/index.htm');
 	});
 
 	var server = app.listen(portNo, function () {
