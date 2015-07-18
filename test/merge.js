@@ -1,5 +1,5 @@
 var assert = require("assert"); // node.js core module
-var merge = require("../merge.js");
+var merge = require("../utility/merge.js");
 
 var readingFuncTimeOut = process.env.TEST_TIMEOUT||10000;
 var showData = process.env.SHOW_DATA||false;

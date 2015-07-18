@@ -1,21 +1,13 @@
 var assert = require("assert"); // node.js core module
 var Q = require("q");
 
-var merge = require("../merge.js");
-var main = require("../main.js");
-
-var kingstone = require("../ReadingFunc/Kingstone.js");
-var books = require("../ReadingFunc/Books.js");
-var eslite = require('../ReadingFunc/Eslite.js');
-var jointPublishing = require('../ReadingFunc/JointPublishing.js');
-var commercialPress = require('../ReadingFunc/CommercialPress.js');
+var jointPublishing = require('../bookParser/JointPublishing.js');
 
 var readingFuncTimeOut = process.env.TEST_TIMEOUT||10000;
 var showData = process.env.SHOW_DATA||false;
 
-describe('ReadingFunc', function(){
+describe('bookParser', function(){
 	this.timeout(readingFuncTimeOut);
-
 	describe('Joint Publishing', function(){
 		describe('getByISBN()', function(){
 			it('should fail to get the data of the book "以小勝大"', function(done){

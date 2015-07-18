@@ -1,5 +1,5 @@
 var assert = require("assert"); // node.js core module
-var ISBNParser = require("../isbn.js");
+var ISBNParser = require("../utility/isbn.js");
 
 var showData = process.env.SHOW_DATA||false;
 
