@@ -24,6 +24,7 @@ exports.getByISBN = function(pISBN) {
 						bookObj.Title = $("#content h1 span").eq(0).text().trim();
 						bookObj.SubTitle = $("#content h1 span").eq(1).text().trim();
 						bookObj.ImageUrl = $("#mainlink img").attr("src");
+            if (bookObj.ImageUrl == "images/product/ProductDefaultImg.jpg") delete bookObj.ImageUrl;
 						var infos = $("#content .PI_info h3, #content .PI_info h2");
 						infos.each(function(i, info) {
 							var text = $(info).text();

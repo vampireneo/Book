@@ -1,9 +1,28 @@
-<html>
+<!doctype html>
+<html ng-app="bookApp">
   <head>
     <title>Search</title>
   </head>
   <body>
-    <h1>Search Books</h1>
-    <p>This is main page.</p>
+    <h1>Search By ISBN</h1>
+    <div ng-controller="SearchBookController as bookSearch">
+      <form ng-submit="bookSearch.search()">
+        <input type="text" ng-model="bookSearch.isbn" size="50"
+               placeholder="search by ISBN here">
+        <input class="btn-primary" type="submit" value="search">
+        <span>{{bookSearch.state}}</span>
+      </form>
+      <div class="searchResult">
+        <h2>Search Result</h2>
+        <ul>
+        <li ng-repeat="data in bookSearch.result.searchData">
+          <span>{{data}}</span>
+        </li>
+      </ul>
+      </div>
+    </div>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="appjs/searchbook.js"></script>
   </body>
 </html>

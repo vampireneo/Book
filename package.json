@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "postinstall": "cd public && bower install",
     "test": "mocha"
   },
   "author": "Neo Choi",
