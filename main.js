@@ -8,6 +8,7 @@ var kingstone = require('./bookParser/Kingstone.js'),
 	books = require('./bookParser/Books.js'),
 	eslite = require('./bookParser/Eslite.js'),
 	jointPublishing = require('./bookParser/JointPublishing.js'),
+	hkBookCity = require('./bookParser/HkBookCity.js'),
 	commercialPress = require('./bookParser/CommercialPress.js');
 
 var defaultISBN = "9789571358512";
@@ -84,7 +85,7 @@ var createServer = function(portNo) {
 					db.close();
 				}
 				else {
-					Q.all([kingstone.getByISBN(pisbn.asIsbn13()), books.getByISBN(pisbn.asIsbn13()), eslite.getByISBN(pisbn.asIsbn13()), jointPublishing.getByISBN(pisbn.asIsbn13()), commercialPress.getByISBN(pisbn.asIsbn13())])
+					Q.all([kingstone.getByISBN(pisbn.asIsbn13()), books.getByISBN(pisbn.asIsbn13()), eslite.getByISBN(pisbn.asIsbn13()), jointPublishing.getByISBN(pisbn.asIsbn13()), commercialPress.getByISBN(pisbn.asIsbn13()), hkBookCity.getByISBN(pisbn.asIsbn13())])
 					.spread(function() {
 						var args = [].slice.call(arguments);
 						book = args.reduce(function(a,b) {
