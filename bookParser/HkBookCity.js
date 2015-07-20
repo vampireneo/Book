@@ -40,7 +40,7 @@ exports.getByISBN = function(pISBN) {
 								case "出版社:":
 									bookObj.Publisher = content;
 									break;
-								case "出版日期":
+								case "出版日期:":
 									bookObj.PublishDate = moment(content,"YYYY/MM").toDate();
 									break;
                 case "頁數:":
