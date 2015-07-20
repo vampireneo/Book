@@ -1,8 +1,8 @@
 var Q = require("q"),
   cheerio = require("cheerio"),
   request = require("request"),
-  moment = require('moment'),
-  ent = require('ent');
+  iconv = require('iconv-lite'),
+  moment = require('moment');
 
 exports.getByISBN = function(pISBN) {
   var domain = "http://www.hkbookcity.com/";
@@ -18,8 +18,9 @@ exports.getByISBN = function(pISBN) {
 			var targetUrl = $(link).attr("href");
 
 			if (link.length > 0) {
-				request(targetUrl, function (error, response, body) {
+				request({url: domain + targetUrl, encoding: null}, function (error, response, body) {
 					if (!error) {
+            body = iconv.decode(new Buffer(body), "big5");
 						$ = cheerio.load(body);
 						bookObj.source = targetUrl;
 						bookObj.Title = $("table img[src='image/bookname.gif']").siblings().find("font").text().trim();
