@@ -1,11 +1,11 @@
 var Q = require("q"),
-  cheerio = require("cheerio"),
-  request = require("request"),
-  moment = require('moment'),
-  ent = require('ent');
+	cheerio = require("cheerio"),
+	request = require("request"),
+	moment = require('moment'),
+	ent = require('ent');
 
 exports.getByISBN = function(pISBN) {
-  var domain = "http://m.books.com.tw";
+	var domain = "http://m.books.com.tw";
 	var searchUrl = "/search?cat=BKA&key=";
 	var bookObj = {};
 	var deferred = Q.defer();
@@ -59,6 +59,9 @@ exports.getByISBN = function(pISBN) {
 									bookObj.PublishDate = moment(content,"YYYY年MM月DD日").toDate();
 									break;
 							}
+						}
+						if (bookObj.ISBN && bookObj.ISBN !== pISBN) {
+							bookObj = {};
 						}
 						deferred.resolve(bookObj);
 					} else {

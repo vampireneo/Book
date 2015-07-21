@@ -23,6 +23,14 @@ describe('bookParser', function(){
 					done();
 				});
 			});
+			it('should be unable to find the book with ISBN "9789881662286"', function(done){
+				Q.all(books.getByISBN("9789881662286"))
+				.then(function(value) {
+					if (showData) console.log(value);
+					if (value.ISBN) return done("Should not be able to find the book.");
+					done();
+				});
+			});
 		});
 	});
 });
