@@ -15,10 +15,10 @@ exports.getByISBN = function(pISBN) {
 		if (!error) {
 			var $ = cheerio.load(body);
 			var link = $(".booktitle").eq(0).closest("a");
-			var targetUrl = $(link).attr("href");
+			var targetUrl = domain + $(link).attr("href");
 
 			if (link.length > 0) {
-				request({url: domain + targetUrl, encoding: null}, function (error, response, body) {
+				request({url: targetUrl, encoding: null}, function (error, response, body) {
 					if (!error) {
             body = iconv.decode(new Buffer(body), "big5");
 						$ = cheerio.load(body);

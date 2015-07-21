@@ -66,8 +66,9 @@ describe('Merge', function() {
 		assert.deepEqual({Author:["Peter", "Paul"]},merge({Author:["Peter", "Paul"]}, {Author:"Paul"}));
 	});
 	it('new Date(2013, 3, 4) + new Date(2013, 3, 4) should retrun new Date(2013, 3, 4)', function() {
-		var d = new Date(2013,3,4);
-		assert.deepEqual(d,merge(d, d));
+		var d1 = new Date(2013,3,4);
+		var d2 = new Date(2013,3,4);
+		assert.deepEqual(d1.getTime(),merge(d1, d2).getTime());
 	});
 	it('new Date(2013, 5, 4) + new Date(2013, 3, 4) should retrun [Apr 04 2013, Jun 04 2013]', function() {
 		var d1 = new Date(2013,3,4);

@@ -48,7 +48,7 @@ module.exports = function merge (target, src) {
         });
         if (src && src instanceof Date && target && target instanceof Date)
         {
-          dst = target === src ? target: [target, src];
+          dst = target.getTime() === src.getTime() ? target : [target, src];
         }
     }
 
