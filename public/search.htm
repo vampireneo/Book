@@ -1,15 +1,23 @@
 <!doctype html>
 <html ng-app="bookApp">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search</title>
+    <link rel="stylesheet" href="/bower_components/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </head>
   <body>
     <h1>Search By ISBN</h1>
     <div ng-controller="SearchBookController as bookSearch">
-      <form ng-submit="bookSearch.search()">
-        <input type="text" ng-model="bookSearch.isbn" size="50"
-               placeholder="search by ISBN here">
-        <input class="btn-primary" type="submit" value="search">
+      <form>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="isbn" ng-model="bookSearch.isbn" />
+          <label class="mdl-textfield__label" for="isbn">search by ISBN</label>
+          <span class="mdl-textfield__error">Input is not an isbn!</span>
+        </div>
+        <button ng-click="bookSearch.search()" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
+          <i class="material-icons">search</i>
+        </button>
         <span>{{bookSearch.state}}</span>
       </form>
       <div class="searchResult">
@@ -21,6 +29,7 @@
       </ul>
       </div>
     </div>
+    <script src="/bower_components/material-design-lite/material.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="appjs/searchbook.js"></script>
