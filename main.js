@@ -50,8 +50,9 @@ var deleteDocuments = function(pisbn, db, callback) {
 
 var createServer = function(portNo) {
 	var app = express();
-
-	app.use(express.static('public'));
+	app.set('views', __dirname + '/views');
+	app.set('view engine', 'jade');
+	app.use(express.static(__dirname + '/public'));
 
 	app.delete('/api/isbn/:id([0-9]+)', function (req, res) {
 		var pisbn = ISBNParser.parse(req.params.id);
@@ -117,7 +118,8 @@ var createServer = function(portNo) {
 	});
 
 	app.get('/', function (req, res) {
-	  res.redirect('/index.htm');
+	  //res.redirect('/index.htm');
+		res.render('index', { users: "test" });
 	});
 
 	var server = app.listen(portNo, function () {
