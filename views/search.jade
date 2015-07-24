@@ -1,0 +1,21 @@
+extends ./layout
+
+block content
+  div(ng-controller="SearchBookController as bookSearch" class="mdl-cell mdl-cell--12-col mdl-grid")
+    div(class="mdl-cell mdl-cell--12-col mdl-color--white mdl-shadow--2dp" style={padding: '0 10px'})
+      h1 Search By ISBN
+      form
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label")
+          input(class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="isbn" ng-model="bookSearch.isbn")
+          label(class="mdl-textfield__label" for="isbn") search by ISBN
+          span(class="mdl-textfield__error") Input is not an isbn!
+        button(ng-click="bookSearch.search()" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored")
+          i(class="material-icons") search
+        span {{bookSearch.state}}
+    div(class="searchResult mdl-cell mdl-cell--12-col mdl-color--white mdl-shadow--2dp" style={padding: '0 10px'})
+      h2 Search Result
+      ul
+        li(ng-repeat="data in bookSearch.result.searchData")
+          span {{data}}
+append script
+  script(src="/appjs/searchbook.js")
