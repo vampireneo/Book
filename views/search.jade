@@ -14,6 +14,67 @@ block content
         span {{bookSearch.state}}
     div(class="searchResult mdl-cell mdl-cell--12-col mdl-color--white mdl-shadow--2dp" style={padding: '0 10px'})
       h2 Search Result
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="title")
+          label(class="mdl-textfield__label" for="title") Title
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="Array.isArray(bookSearch.result.searchData.Title)")
+            li(ng-repeat="data in bookSearch.result.searchData.Title")
+              a(href="#") {{data}}
+          div(ng-if="!Array.isArray(bookSearch.result.searchData.Title)")
+            a(href="#") {{bookSearch.result.searchData.Title}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="subtitle")
+          label(class="mdl-textfield__label" for="subtitle") SubTitle
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="Array.isArray(bookSearch.result.searchData.SubTitle)")
+            li(ng-repeat="data in bookSearch.result.searchData.SubTitle")
+              a(href="#") {{data}}
+          div(ng-if="!Array.isArray(bookSearch.result.searchData.SubTitle)")
+            a(href="#") {{bookSearch.result.searchData.SubTitle}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="author")
+          label(class="mdl-textfield__label" for="author") Author
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="Array.isArray(bookSearch.result.searchData.Author)")
+            li(ng-repeat="data in bookSearch.result.searchData.Author")
+              a(href="#") {{data}}
+          div(ng-if="!Array.isArray(bookSearch.result.searchData.Author)")
+            a(href="#") {{bookSearch.result.searchData.Author}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="imageUrl")
+          label(class="mdl-textfield__label" for="imageUrl") Image Url
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="Array.isArray(bookSearch.result.searchData.ImageUrl)")
+            li(ng-repeat="data in bookSearch.result.searchData.ImageUrl")
+              a(href="#") {{data}}
+          div(ng-if="!Array.isArray(bookSearch.result.searchData.ImageUrl)")
+            a(href="#") {{bookSearch.result.searchData.ImageUrl}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="language")
+          label(class="mdl-textfield__label" for="language") Language
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="Array.isArray(bookSearch.result.searchData.Language)")
+            li(ng-repeat="data in bookSearch.result.searchData.Language")
+              a(href="#") {{data}}
+          div(ng-if="!Array.isArray(bookSearch.result.searchData.Language)")
+            a(href="#") {{bookSearch.result.searchData.Language}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="publisher")
+          label(class="mdl-textfield__label" for="publisher") Publisher
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="Array.isArray(bookSearch.result.searchData.Publisher)")
+            li(ng-repeat="data in bookSearch.result.searchData.Publisher")
+              a(href="#") {{data}}
+          div(ng-if="!Array.isArray(bookSearch.result.searchData.Publisher)")
+            a(href="#") {{bookSearch.result.searchData.Publisher}}
+      
       ul
         li(ng-repeat="data in bookSearch.result.searchData")
           span {{data}}
