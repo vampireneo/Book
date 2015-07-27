@@ -19,64 +19,105 @@ block content
           input(class="mdl-textfield__input" type="text" id="title")
           label(class="mdl-textfield__label" for="title") Title
         div(class="mdl-cell mdl-cell--6-col")
-          ul(ng-if="Array.isArray(bookSearch.result.searchData.Title)")
+          ul(ng-if="bookSearch.result.searchData.Title.constructor.toString().indexOf('Array') >= 0")
             li(ng-repeat="data in bookSearch.result.searchData.Title")
               a(href="#") {{data}}
-          div(ng-if="!Array.isArray(bookSearch.result.searchData.Title)")
+          div(ng-if="bookSearch.result.searchData.Title.constructor.toString().indexOf('Array') < 0")
+            div {{bookSearch.result.searchData.Title.constructor.toString().indexOf('Array') >= 0}}
             a(href="#") {{bookSearch.result.searchData.Title}}
       div(class="mdl-grid")
         div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
           input(class="mdl-textfield__input" type="text" id="subtitle")
           label(class="mdl-textfield__label" for="subtitle") SubTitle
         div(class="mdl-cell mdl-cell--6-col")
-          ul(ng-if="Array.isArray(bookSearch.result.searchData.SubTitle)")
+          ul(ng-if="bookSearch.result.searchData.SubTitle.constructor.toString().indexOf('Array') >= 0")
             li(ng-repeat="data in bookSearch.result.searchData.SubTitle")
               a(href="#") {{data}}
-          div(ng-if="!Array.isArray(bookSearch.result.searchData.SubTitle)")
+          div(ng-if="bookSearch.result.searchData.SubTitle.constructor.toString().indexOf('Array') < 0")
             a(href="#") {{bookSearch.result.searchData.SubTitle}}
       div(class="mdl-grid")
         div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
           input(class="mdl-textfield__input" type="text" id="author")
           label(class="mdl-textfield__label" for="author") Author
         div(class="mdl-cell mdl-cell--6-col")
-          ul(ng-if="Array.isArray(bookSearch.result.searchData.Author)")
+          ul(ng-if="bookSearch.result.searchData.Author.constructor.toString().indexOf('Array') >= 0")
             li(ng-repeat="data in bookSearch.result.searchData.Author")
               a(href="#") {{data}}
-          div(ng-if="!Array.isArray(bookSearch.result.searchData.Author)")
+          div(ng-if="bookSearch.result.searchData.Author.constructor.toString().indexOf('Array') < 0")
             a(href="#") {{bookSearch.result.searchData.Author}}
       div(class="mdl-grid")
         div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
           input(class="mdl-textfield__input" type="text" id="imageUrl")
           label(class="mdl-textfield__label" for="imageUrl") Image Url
         div(class="mdl-cell mdl-cell--6-col")
-          ul(ng-if="Array.isArray(bookSearch.result.searchData.ImageUrl)")
+          ul(ng-if="bookSearch.result.searchData.ImageUrl.constructor.toString().indexOf('Array') >= 0")
             li(ng-repeat="data in bookSearch.result.searchData.ImageUrl")
               a(href="#") {{data}}
-          div(ng-if="!Array.isArray(bookSearch.result.searchData.ImageUrl)")
+          div(ng-if="bookSearch.result.searchData.ImageUrl.constructor.toString().indexOf('Array') < 0")
             a(href="#") {{bookSearch.result.searchData.ImageUrl}}
       div(class="mdl-grid")
         div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
           input(class="mdl-textfield__input" type="text" id="language")
           label(class="mdl-textfield__label" for="language") Language
         div(class="mdl-cell mdl-cell--6-col")
-          ul(ng-if="Array.isArray(bookSearch.result.searchData.Language)")
+          ul(ng-if="bookSearch.result.searchData.Language.constructor.toString().indexOf('Array') >= 0")
             li(ng-repeat="data in bookSearch.result.searchData.Language")
               a(href="#") {{data}}
-          div(ng-if="!Array.isArray(bookSearch.result.searchData.Language)")
+          div(ng-if="bookSearch.result.searchData.Language.constructor.toString().indexOf('Array') < 0")
             a(href="#") {{bookSearch.result.searchData.Language}}
       div(class="mdl-grid")
         div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
           input(class="mdl-textfield__input" type="text" id="publisher")
           label(class="mdl-textfield__label" for="publisher") Publisher
         div(class="mdl-cell mdl-cell--6-col")
-          ul(ng-if="Array.isArray(bookSearch.result.searchData.Publisher)")
+          ul(ng-if="bookSearch.result.searchData.Publisher.constructor.toString().indexOf('Array') >= 0")
             li(ng-repeat="data in bookSearch.result.searchData.Publisher")
               a(href="#") {{data}}
-          div(ng-if="!Array.isArray(bookSearch.result.searchData.Publisher)")
+          div(ng-if="bookSearch.result.searchData.Publisher.constructor.toString().indexOf('Array') < 0")
             a(href="#") {{bookSearch.result.searchData.Publisher}}
-      
-      ul
-        li(ng-repeat="data in bookSearch.result.searchData")
-          span {{data}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="pages")
+          label(class="mdl-textfield__label" for="pages") Pages
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="bookSearch.result.searchData.Pages.constructor.toString().indexOf('Array') >= 0")
+            li(ng-repeat="data in bookSearch.result.searchData.Pages")
+              a(href="#") {{data}}
+          div(ng-if="bookSearch.result.searchData.Pages.constructor.toString().indexOf('Array') < 0")
+            a(href="#") {{bookSearch.result.searchData.Pages}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="publishDate")
+          label(class="mdl-textfield__label" for="publishDate") Publish Date
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="bookSearch.result.searchData.PublishDate.constructor.toString().indexOf('Array') >= 0")
+            li(ng-repeat="data in bookSearch.result.searchData.PublishDate")
+              a(href="#") {{data}}
+          div(ng-if="bookSearch.result.searchData.PublishDate.constructor.toString().indexOf('Array') < 0")
+            a(href="#") {{bookSearch.result.searchData.PublishDate}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="series")
+          label(class="mdl-textfield__label" for="series") Series
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="bookSearch.result.searchData.Series.constructor.toString().indexOf('Array') >= 0")
+            li(ng-repeat="data in bookSearch.result.searchData.Series")
+              a(href="#") {{data}}
+          div(ng-if="bookSearch.result.searchData.Series.constructor.toString().indexOf('Array') < 0")
+            a(href="#") {{bookSearch.result.searchData.Series}}
+      div(class="mdl-grid")
+        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col")
+          input(class="mdl-textfield__input" type="text" id="spec")
+          label(class="mdl-textfield__label" for="spec") Spec
+        div(class="mdl-cell mdl-cell--6-col")
+          ul(ng-if="bookSearch.result.searchData.Spec.constructor.toString().indexOf('Array') >= 0")
+            li(ng-repeat="data in bookSearch.result.searchData.Spec")
+              a(href="#") {{data}}
+          div(ng-if="bookSearch.result.searchData.Spec.constructor.toString().indexOf('Array') < 0")
+            a(href="#") {{bookSearch.result.searchData.Spec}}
+      //
+        ul
+          li(ng-repeat="data in bookSearch.result.searchData")
+            span {{data}}
 append script
   script(src="/appjs/searchbook.js")
