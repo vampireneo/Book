@@ -31,6 +31,9 @@ angular.module('bookApp', [])
     };
 
     bookSearch.setOption = function (field, data) {
-      bookSearch[field] = data;
+      if (field === "PublishDate")
+        bookSearch[field] = $filter('date')(data, "yyyy-MM-dd");
+      else
+        bookSearch[field] = data;
     };
   });
