@@ -30,6 +30,22 @@ angular.module('bookApp', [])
       //bookSearch.isbn = '';
     };
 
+    bookSearch.save = function () {
+      bookSearch.result.Title = bookSearch.Title;
+      bookSearch.result.SubTitle = bookSearch.SubTitle;
+      bookSearch.result.Author = bookSearch.Author;
+      bookSearch.result.ImageUrl = bookSearch.ImageUrl;
+      bookSearch.result.Language = bookSearch.Language;
+      bookSearch.result.Publisher = bookSearch.Publisher;
+      bookSearch.result.Pages = bookSearch.Pages;
+      bookSearch.result.PublishDate = bookSearch.PublishDate;
+      bookSearch.result.Series = bookSearch.Series;
+      bookSearch.result.Spec = bookSearch.Spec;
+
+      //todo: save it to db
+      console.log(bookSearch.result);
+    };
+
     bookSearch.setOption = function (field, data) {
       if (field === "PublishDate")
         bookSearch[field] = $filter('date')(data, "yyyy-MM-dd");

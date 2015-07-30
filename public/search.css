@@ -1,6 +1,15 @@
 .searchResult .resultOptionWrapper {
   margin-top: -20px;
 }
+.searchResult .resultOptionWrapper .resultOptions img {
+  height: 100px;
+}
+.searchResult .bookCoverWrapper {
+
+}
+.searchResult img.bookCover {
+  height: 150px;
+}
 .resultOptions {
   display: inline-block;
   margin-right: 10px;

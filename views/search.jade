@@ -45,14 +45,17 @@ block content
           div(ng-if="bookSearch.result.searchData.Author.constructor.toString().indexOf('Array') < 0")
             span(class="resultOptions"): a(href="#" ng-click="bookSearch.setOption('Author', bookSearch.result.searchData.Author)") {{bookSearch.result.searchData.Author}}
       div(class="mdl-grid")
-        div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col")
-          input(class="mdl-textfield__input" type="text" id="imageUrl" ng-model="bookSearch.ImageUrl")
-          label(class="mdl-textfield__label" for="imageUrl") Image Url
+        //
+          div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col")
+            input(class="mdl-textfield__input" type="text" id="imageUrl" ng-model="bookSearch.ImageUrl")
+            label(class="mdl-textfield__label" for="imageUrl") Image Url
+        div(class="mdl-grid mdl-cell--12-col")
+          img(ng-src="{{bookSearch.ImageUrl}}" alt="Book Cover" class="bookCover")
         div(class="mdl-cell mdl-cell--12-col resultOptionWrapper")
-          div(ng-if="bookSearch.result.searchData.ImageUrl.constructor.toString().indexOf('Array') >= 0")
-            span(ng-repeat="data in bookSearch.result.searchData.ImageUrl" class="resultOptions"): a(href="#" ng-click="bookSearch.setOption('ImageUrl', data)") {{data}}
-          div(ng-if="bookSearch.result.searchData.ImageUrl.constructor.toString().indexOf('Array') < 0")
-            span(class="resultOptions"): a(href="#" ng-click="bookSearch.setOption('ImageUrl', bookSearch.result.searchData.ImageUrl)") {{bookSearch.result.searchData.ImageUrl}}
+          div(ng-if="bookSearch.result.searchData.ImageUrl.constructor.toString().indexOf('Array') >= 0" class="mdl-grid")
+            span(ng-repeat="data in bookSearch.result.searchData.ImageUrl" class="resultOptions mdl-cell mdl-cell--2-col"): a(href="#" ng-click="bookSearch.setOption('ImageUrl', data)"): img(ng-src="{{data}}" alt="Book Cover")
+          div(ng-if="bookSearch.result.searchData.ImageUrl.constructor.toString().indexOf('Array') < 0" class="mdl-grid")
+            span(class="resultOptions mdl-cell mdl-cell--2-col"): a(href="#" ng-click="bookSearch.setOption('ImageUrl', bookSearch.result.searchData.ImageUrl)"): img(ng-src="{{bookSearch.result.searchData.ImageUrl}}" alt="Book Cover")
       div(class="mdl-grid")
         div(class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col")
           input(class="mdl-textfield__input" type="text" id="language" ng-model="bookSearch.Language")
@@ -107,6 +110,8 @@ block content
             span(ng-repeat="data in bookSearch.result.searchData.Spec" class="resultOptions"): a(href="#" ng-click="bookSearch.setOption('Spec', data)") {{data}}
           div(ng-if="bookSearch.result.searchData.Spec.constructor.toString().indexOf('Array') < 0")
             span(class="resultOptions"): a(href="#" ng-click="bookSearch.setOption('Spec', bookSearch.result.searchData.Spec)") {{bookSearch.result.searchData.Spec}}
+      div(class="mdl-grid")
+        button(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" ng-click="bookSearch.save()") Save
       //
         ul
           li(ng-repeat="data in bookSearch.result.searchData")
