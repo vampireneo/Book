@@ -3,6 +3,7 @@ angular.module('bookApp', [])
     var bookSearch = this;
 
     function SetFields(options, inputName) {
+      if (typeof options === 'undefined') return;
       $("#" + inputName).closest("div").addClass("is-dirty");
       return options.constructor.toString().indexOf('Array') >= 0 ? options[0] : options;
     }
