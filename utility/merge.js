@@ -7,20 +7,22 @@ module.exports = function merge (target, src) {
         dst = dst.concat(target);
         if (src.forEach) {
           src.forEach(function(e, i) {
-              if (typeof target[i] === 'undefined') {
-                  if (target.indexOf(e) === -1) {
-                      dst.push(e);
-                  }
-              } else if (typeof e === 'object' && !(e instanceof Date)) {
-                  dst[i] = merge(target[i], e);
-              } else {
-                  if ((!(e instanceof Date) && target.indexOf(e) === -1) || ((e instanceof Date) && target.map(Number).indexOf(+e) === -1)) {
-                      dst.push(e);
-                  }
+            if (typeof target[i] === 'undefined') {
+              if (target.indexOf(e) === -1) {
+                  dst.push(e);
               }
+            } else if (typeof e === 'object' && !(e instanceof Date)) {
+                dst[i] = merge(target[i], e);
+            } else {
+                if ((!(e instanceof Date) && dst.indexOf(e) === -1) || ((e instanceof Date) && dst.map(Number).indexOf(+e) === -1)) {
+                    dst.push(e);
+                }
+            }
           });
         } else {
-          dst.push(src);
+          if ((!(src instanceof Date) && dst.indexOf(src) === -1) || ((src instanceof Date) && dst.map(Number).indexOf(+src) === -1)) {
+              dst.push(src);
+          }
         }
     } else {
         if (target && typeof target === 'object' && !Array.isArray(target)) {

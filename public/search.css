@@ -1,0 +1,23 @@
+.searchResult .resultOptionWrapper {
+  margin-top: -20px;
+}
+.searchResult .resultOptionWrapper .resultOptions img {
+  height: 100px;
+}
+.searchResult .bookCoverWrapper {
+
+}
+.searchResult img.bookCover {
+  border: 2px white solid;
+}
+.searchResult img.selected {
+  border: 2px navy solid;
+}
+.resultOptions {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.resultOptions a {
+  display: block;
+}

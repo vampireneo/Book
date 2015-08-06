@@ -50,6 +50,7 @@ var deleteDocuments = function(pisbn, db, callback) {
 
 var createServer = function(portNo) {
 	var app = express();
+	app.locals.pretty = true;
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(express.static(__dirname + '/public'));
@@ -117,9 +118,14 @@ var createServer = function(portNo) {
 	  res.redirect('/api/isbn/' + defaultISBN);
 	});
 
+	app.get('/search', function (req, res) {
+	  //res.redirect('/index.htm');
+		res.render('search', { pageTitle: "Search" });
+	});
+
 	app.get('/', function (req, res) {
 	  //res.redirect('/index.htm');
-		res.render('index', { users: "test" });
+		res.render('index', { pageTitle: "Home" });
 	});
 
 	var server = app.listen(portNo, function () {
