@@ -8,7 +8,10 @@
 
 }
 .searchResult img.bookCover {
-  height: 150px;
+  border: 2px white solid;
+}
+.searchResult img.selected {
+  border: 2px navy solid;
 }
 .resultOptions {
   display: inline-block;
