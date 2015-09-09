@@ -7,6 +7,7 @@ Setup a web service to return book information by providing ISBN
 [![Circle CI](https://circleci.com/gh/vampireneo/Book.svg?style=svg)](https://circleci.com/gh/vampireneo/Book)
 
 [![Code Climate](https://codeclimate.com/github/vampireneo/Book/badges/gpa.svg)](https://codeclimate.com/github/vampireneo/Book)
+[![Codacy Badge](https://api.codacy.com/project/badge/64cb85b39df648e0b256d07d1f503f8d)](https://www.codacy.com/app/neochoi/Book)
 [![Coverage Status](https://coveralls.io/repos/vampireneo/Book/badge.svg?branch=master)](https://coveralls.io/r/vampireneo/Book?branch=master)
 [![Test Coverage](https://codeclimate.com/github/vampireneo/Book/badges/coverage.svg)](https://codeclimate.com/github/vampireneo/Book/coverage)
 [![Dependency Status](https://david-dm.org/vampireneo/book.svg)](https://david-dm.org/vampireneo/book)
