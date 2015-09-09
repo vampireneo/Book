@@ -4,10 +4,7 @@ node_js:
 before_install:
 - npm -g install mocha
 - npm -g install bower
-after_script: NODE_ENV=test istanbul cover ./node_modules/mocha/bin/_mocha --report
-  lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-  && ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info
-  && rm -rf ./coverage
+after_script: NODE_ENV=test istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage && ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info && rm -rf ./coverage
 notifications:
   slack:
     secure: To7I7KreFL3ykwNWcrjgdnS+9pnd8q4UDZzDYk7g3CTt3HSGYWh5B7MUWp4L5256K2I8ApgglJuFvGIXl1yCcJcfvUYJoRHCHMCiQlVLizrMJjWPGeCA9bpYUsEoruAP609x6+1LBNzCbsSrln7o17TbX36Bw+kXRlzAzWGxXAE=
