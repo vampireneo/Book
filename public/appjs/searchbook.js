@@ -45,6 +45,14 @@ angular.module('bookApp', [])
 
       //todo: save it to db
       console.log(bookSearch.result);
+      $http.post("/api/isbn/" + bookSearch.isbn, bookSearch.result).
+        then(function(response) {
+          //success
+          alert("saved");
+        }, function(response) {
+          //error
+          console.error(response);
+        });
     };
 
     bookSearch.setOption = function (field, data) {
