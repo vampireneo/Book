@@ -11,6 +11,7 @@
   "author": "Neo Choi",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "bower": "^1.4.1",
     "cheerio": "^0.19.0",
     "codacy-coverage": "^1.1.3",
