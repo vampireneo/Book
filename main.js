@@ -18,6 +18,14 @@ var defaultISBN = "9789571358512";
 
 var connectionStr = process.env.BOOKDB || "mongodb://localhost:27017/books";
 
+var users = {
+  tester: {
+    username: 'tester',
+    password: '1234',
+    id: 1,
+  }
+};
+
 var findBook = function(pisbn, db, callback) {
   // Get the documents collection
   var collection = db.collection('books');
@@ -57,20 +65,34 @@ var createServer = function(portNo) {
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(express.static(__dirname + '/public'));
+	app.use(bodyParser.urlencoded( { extended: false } ) );
 	app.use(bodyParser.json());
+	app.use(passport.initialize() );
 
-	passport.use(new LocalStrategy(
+	passport.serializeUser(function(user, done) {
+	  done(null, user);
+	});
+
+	passport.deserializeUser(function(user, done) {
+	  done(null, user);
+	});
+
+	passport.use('local', new localStrategy({
+      usernameField: 'username',
+      passwordField: 'password',
+    },
 		function(username, password, done) {
-			User.findOne({ username: username }, function(err, user) {
-				if (err) { return done(err); }
-				if (!user) {
-					return done(null, false, { message: 'Incorrect username.' });
-				}
-				if (!user.validPassword(password)) {
-					return done(null, false, { message: 'Incorrect password.' });
-				}
-				return done(null, user);
-			});
+			user = users[ username ];
+
+			if ( user === null ) {
+        return done( null, false, { message: 'Invalid user' } );
+      }
+
+      if ( user.password !== password ) {
+        return done( null, false, { message: 'Invalid password' } );
+      }
+
+      done( null, user );
 		}
 	));
 
