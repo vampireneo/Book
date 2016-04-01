@@ -1,8 +1,11 @@
 var express = require('express'),
+	bodyParser = require('body-parser'),
 	Q = require("q"),
 	MongoClient = require('mongodb').MongoClient,
 	ISBNParser = require("./utility/isbn.js"),
-	merge = require('./utility/merge.js');
+	merge = require('./utility/merge.js'),
+	passport = require('passport'),
+	localStrategy = require('passport-local').Strategy;
 
 var kingstone = require('./bookParser/Kingstone.js'),
 	books = require('./bookParser/Books.js'),
@@ -14,6 +17,14 @@ var kingstone = require('./bookParser/Kingstone.js'),
 var defaultISBN = "9789571358512";
 
 var connectionStr = process.env.BOOKDB || "mongodb://localhost:27017/books";
+
+var users = {
+  tester: {
+    username: 'tester',
+    password: '1234',
+    id: 1,
+  }
+};
 
 var findBook = function(pisbn, db, callback) {
   // Get the documents collection
@@ -54,6 +65,48 @@ var createServer = function(portNo) {
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(express.static(__dirname + '/public'));
+	app.use(bodyParser.urlencoded( { extended: false } ) );
+	app.use(bodyParser.json());
+	app.use(passport.initialize() );
+
+	passport.serializeUser(function(user, done) {
+	  done(null, user);
+	});
+
+	passport.deserializeUser(function(user, done) {
+	  done(null, user);
+	});
+
+	passport.use('local', new localStrategy({
+      usernameField: 'username',
+      passwordField: 'password',
+    },
+		function(username, password, done) {
+			user = users[ username ];
+
+			if ( user === null ) {
+        return done( null, false, { message: 'Invalid user' } );
+      }
+
+      if ( user.password !== password ) {
+        return done( null, false, { message: 'Invalid password' } );
+      }
+
+      done( null, user );
+		}
+	));
+
+	app.post('/login', passport.authenticate('local', {
+		successRedirect: '/',
+		failureRedirect: '/login',
+		failureFlash: true
+	}));
+
+	app.post('/api/isbn/:id([0-9]+)', function (req, res) {
+		var pisbn = ISBNParser.parse(req.params.id);
+		console.log(req.body);
+		res.status(200).send();
+	});
 
 	app.delete('/api/isbn/:id([0-9]+)', function (req, res) {
 		var pisbn = ISBNParser.parse(req.params.id);
