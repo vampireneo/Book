@@ -56,6 +56,7 @@ html, body {
   display: -ms-flexbox;
   display: flex;
   position: relative;
+  -ms-box-orient: horizontal;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
   -webkit-flex-direction: row;
@@ -154,6 +155,7 @@ _:-ms-input-placeholder, :root .demo-graph {
 }
 
 .demo-cards {
+  -moz-box-align: start;
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
       -ms-flex-align: start;
