@@ -999,4 +999,4 @@ ISBN.isbn.prototype = {
 };
 }());
 
-module.exports        = ISBN
+module.exports = ISBN;

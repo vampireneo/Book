@@ -82,7 +82,7 @@ var createServer = function(portNo) {
       passwordField: 'password',
     },
 		function(username, password, done) {
-			user = users[ username ];
+			var user = users[ username ];
 
 			if ( user === null ) {
         return done( null, false, { message: 'Invalid user' } );
