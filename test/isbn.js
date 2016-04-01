@@ -1,7 +1,7 @@
 var assert = require("assert"); // node.js core module
 var ISBNParser = require("../utility/isbn.js");
 
-var showData = process.env.SHOW_DATA||false;
+//var showData = process.env.SHOW_DATA||false;
 
 describe('ISBN', function() {
 	describe('var isbn10a = ISBNParser.parse("4873113369")', function() {

@@ -7,10 +7,10 @@
 .searchResult .bookCoverWrapper {
 
 }
-.searchResult img.bookCover {
+.bookCover {
   border: 2px white solid;
 }
-.searchResult img.selected {
+.selected {
   border: 2px navy solid;
 }
 .resultOptions {

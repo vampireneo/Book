@@ -1,11 +1,11 @@
 var assert = require("assert"); // node.js core module
-var Q = require("q");
+//var Q = require("q");
 var superagent = require('superagent');
 var status = require('http-status');
 
 var server = require("../main.js");
 
-var readingFuncTimeOut = process.env.TEST_TIMEOUT||10000;
+//var readingFuncTimeOut = process.env.TEST_TIMEOUT||10000;
 var showData = process.env.SHOW_DATA||false;
 
 describe('Server', function(){
