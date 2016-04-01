@@ -20,6 +20,7 @@
     "iconv-lite": "^0.4.11",
     "jade": "^1.11.0",
     "le_node": "^1.0.8",
+    "mocha-lcov-reporter": "^1.2.0",
     "moment": "^2.10.2",
     "mongodb": "^2.0.36",
     "newrelic": "^1.20.2",
