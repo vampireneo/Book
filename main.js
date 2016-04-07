@@ -140,6 +140,7 @@ var createServer = function(portNo) {
 					db.close();
 				}
 				else {
+					//have to find a better way for scraping
 					Q.all([kingstone.getByISBN(pisbn.asIsbn13()), books.getByISBN(pisbn.asIsbn13()), eslite.getByISBN(pisbn.asIsbn13()), jointPublishing.getByISBN(pisbn.asIsbn13()), commercialPress.getByISBN(pisbn.asIsbn13()), hkBookCity.getByISBN(pisbn.asIsbn13())])
 					.spread(function() {
 						var args = [].slice.call(arguments);

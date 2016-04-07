@@ -27,7 +27,8 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "q": "^1.4.1",
-    "request": "^2.69.0"
+    "request": "^2.69.0",
+    "yakuza": "^1.0.7"
   },
   "devDependencies": {
     "codeclimate-test-reporter": "^0.3.1",
