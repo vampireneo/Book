@@ -1,6 +1,7 @@
+# Book
+
 Setup a web service to return book information by providing ISBN
 
-[![Build Status](https://drone.io/github.com/vampireneo/Book/status.png)](https://drone.io/github.com/vampireneo/Book/latest)
 [![Build Status](https://travis-ci.org/vampireneo/Book.svg)](https://travis-ci.org/vampireneo/Book)
 [![Build Status](https://semaphoreci.com/api/v1/projects/e2f1c0f1-0c15-4c6b-8657-c9d5d3f347c1/472432/badge.svg)](https://semaphoreci.com/vampireneo/book)
 [![Build Status](https://codeship.com/projects/dfc3aa70-0249-0133-30ff-6e731e5fc1cb/status?branch=develop)](https://codeship.com/projects/88886/)
